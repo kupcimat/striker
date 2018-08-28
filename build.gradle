@@ -24,11 +24,15 @@ repositories {
 
 
 dependencies {
+    compileOnly('org.projectlombok:lombok')
+
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.flywaydb:flyway-core')
+
+    // required for hibernate, because it was removed from java 10
+    runtime('javax.xml.bind:jaxb-api:2.3.0')
     runtime('com.h2database:h2')
-    compileOnly('org.projectlombok:lombok')
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
