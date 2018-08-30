@@ -38,3 +38,8 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+// task run by heroku
+task stage {
+    dependsOn bootJar
+}
