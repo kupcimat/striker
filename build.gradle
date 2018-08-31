@@ -43,5 +43,7 @@ dependencies {
 
 // task run by heroku
 task stage {
+    dependsOn clean
     dependsOn bootJar
 }
+bootJar.mustRunAfter clean
