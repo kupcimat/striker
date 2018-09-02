@@ -1,1 +1,1 @@
-web: bin/striker
+web: bin/heroku

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -x
+
+JAVA_OPTIONS="-Xmx300m -Xss512k -Dfile.encoding=UTF-8"
+APP_OPTIONS="--spring.profiles.active=heroku"
+
+java $JAVA_OPTIONS -jar build/libs/striker-*.jar $APP_OPTIONS
