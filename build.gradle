@@ -32,13 +32,27 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
 
-    // required for hibernate, because it was removed from java 10
+    // required for hibernate, because it was removed in java 10
     runtime('javax.xml.bind:jaxb-api:2.3.0')
     runtime('org.flywaydb:flyway-core')
     runtime('org.postgresql:postgresql')
     runtime('com.h2database:h2')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.boot:spring-boot-starter-webflux')
+}
+
+test {
+    def serverUrl = System.getProperty("serverUrl")
+    if (serverUrl) {
+        systemProperty "serverUrl", serverUrl
+        filter.includeTestsMatching "*IT"
+    } else {
+        filter.includeTestsMatching "*Test"
+    }
+
+    testLogging.events "passed", "skipped", "failed"
+    testLogging.exceptionFormat "full"
 }
 
 // task run by heroku
