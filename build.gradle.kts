@@ -20,7 +20,8 @@ springBoot {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
+    maven("http://repo.spring.io/milestone")
 }
 
 dependencies {
@@ -63,7 +64,6 @@ tasks {
 
     // task run by heroku
     stage {
-        dependsOn(clean)
-        dependsOn(bootJar)
+        dependsOn(clean, bootJar)
     }
 }
