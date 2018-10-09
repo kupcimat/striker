@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 
 plugins {
     java
-    id("org.springframework.boot") version "2.0.5.RELEASE"
+    id("org.springframework.boot") version "2.1.0.M4"
     id("io.spring.dependency-management") version "1.0.6.RELEASE"
 }
 
@@ -11,8 +11,8 @@ group = "org.saigon"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_10
-    targetCompatibility = JavaVersion.VERSION_1_10
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 springBoot {
@@ -29,8 +29,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-web")
 
-    // required for hibernate, because it was removed in java 10
-    runtime("javax.xml.bind:jaxb-api:2.3.0")
     runtime("com.h2database:h2")
     runtime("org.flywaydb:flyway-core")
     runtime("org.postgresql:postgresql")
