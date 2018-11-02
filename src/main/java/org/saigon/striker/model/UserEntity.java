@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 @Entity
 @Table(name = "user")
 public class UserEntity {
@@ -23,6 +25,15 @@ public class UserEntity {
     public UserEntity(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public static UserEntity fromUser(User user) {
+        notNull(user);
+        return new UserEntity(user.getUsername(), user.getPassword());
+    }
+
+    public User toUser() {
+        return new User(username, password);
     }
 
     public Long getId() {

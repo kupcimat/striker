@@ -1,4 +1,4 @@
-package org.saigon.striker;
+package org.saigon.striker.controller;
 
 import org.saigon.striker.model.Resolution;
 import org.saigon.striker.model.ResolutionList;
@@ -23,11 +23,13 @@ public class MainController {
     }
 
     @GetMapping
+    // TODO check what is returned for random uri, e.g. /haha
     public String index() {
         return "Welcome to the Striker!";
     }
 
     @PostMapping("/resolution")
+    // TODO replace with ResponseEntity.created()?
     @ResponseStatus(HttpStatus.CREATED)
     public Resolution createResolution(@RequestBody Resolution resolution) {
         return resolutionService.createResolution(resolution);
@@ -44,6 +46,7 @@ public class MainController {
     }
 
     @DeleteMapping("/resolution/{name}")
+    // TODO replace with ResponseEntity.noContent()?
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteResolution(@PathVariable String name) {
         resolutionService.deleteResolution(name);

@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 @Entity
 @Table(name = "resolution")
 public class ResolutionEntity {
@@ -28,6 +30,7 @@ public class ResolutionEntity {
     }
 
     public static ResolutionEntity fromResolution(Resolution resolution) {
+        notNull(resolution);
         return new ResolutionEntity(resolution.getName(), resolution.getDays());
     }
 

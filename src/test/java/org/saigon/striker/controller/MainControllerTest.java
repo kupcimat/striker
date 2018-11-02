@@ -1,4 +1,4 @@
-package org.saigon.striker;
+package org.saigon.striker.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

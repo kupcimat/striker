@@ -11,42 +11,41 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Objects;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
-import static org.apache.commons.lang3.Validate.notNull;
 
-@JsonTypeName("resolution")
+@JsonTypeName("user")
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Resolution {
+public class User {
 
-    private final String name;
-    private final Long days;
+    private final String username;
+    private final String password;
 
     @JsonCreator
-    public Resolution(@JsonProperty("name") String name,
-                      @JsonProperty("days") Long days) {
-        this.name = notEmpty(name);
-        this.days = notNull(days);
+    public User(@JsonProperty("username") String username,
+                @JsonProperty("password") String password) {
+        this.username = notEmpty(username);
+        this.password = notEmpty(password);
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public Long getDays() {
-        return days;
+    public String getPassword() {
+        return password;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Resolution that = (Resolution) o;
-        return Objects.equals(name, that.name) &&
-                Objects.equals(days, that.days);
+        User user = (User) o;
+        return Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, days);
+        return Objects.hash(username, password);
     }
 }
