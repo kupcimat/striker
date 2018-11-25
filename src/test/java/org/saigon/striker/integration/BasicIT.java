@@ -6,7 +6,7 @@ public class BasicIT extends BaseIT {
 
     @Test
     public void name() {
-        webTestClient.get().uri("/resolution")
+        webTestClient.get().uri("/agoda")
                 .exchange()
                 .expectStatus().isOk();
     }
