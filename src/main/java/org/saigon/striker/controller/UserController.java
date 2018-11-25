@@ -16,6 +16,7 @@ import java.net.URI;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+// TODO switch to reactive controller
 @RestController
 @RequestMapping(UserController.USER_URI)
 public class UserController {

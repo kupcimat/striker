@@ -29,14 +29,13 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-webflux")
 
     runtime("com.h2database:h2")
     runtime("org.flywaydb:flyway-core")
     runtime("org.postgresql:postgresql")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("org.springframework.boot:spring-boot-starter-webflux")
     testCompile("org.springframework.security:spring-security-test")
 }
 

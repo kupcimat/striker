@@ -2,16 +2,17 @@ package org.saigon.striker.service;
 
 import org.saigon.striker.model.UserEntity;
 import org.saigon.striker.model.UserRepository;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import static java.lang.String.format;
 import static org.apache.commons.lang3.Validate.notNull;
 
+// TODO switch to reactive
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements ReactiveUserDetailsService {
 
     public static final String ROLE_USER = "USER";
 
@@ -22,15 +23,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(format("Username '%s' not found", username)));
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(userEntity.getUsername())
-                .password(userEntity.getPassword())
-                .roles(ROLE_USER)
-                .build();
+    public Mono<UserDetails> findByUsername(String username) {
+        // TODO switch to mongo db
+        return Mono.defer(() -> Mono.justOrEmpty(userRepository.findByUsername(username)))
+                .subscribeOn(Schedulers.elastic())
+                .map(this::userEntityToUserDetails);
     }
 
     public UserEntity createUser(UserEntity userEntity) {
@@ -46,5 +43,13 @@ public class UserService implements UserDetailsService {
     public void deleteUser(long userId) {
         getUser(userId);
         userRepository.deleteById(userId);
+    }
+
+    private UserDetails userEntityToUserDetails(UserEntity userEntity) {
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(userEntity.getUsername())
+                .password(userEntity.getPassword())
+                .roles(ROLE_USER)
+                .build();
     }
 }
