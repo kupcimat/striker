@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.net.URI;
+import org.springframework.web.util.UriTemplate;
+import reactor.core.publisher.Mono;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
 // TODO switch to reactive controller
 @RestController
-@RequestMapping(UserController.USER_URI)
 public class UserController {
 
-    public static final String USER_URI = "/admin/user";
+    public static final String USERS_URI_TEMPLATE = "/admin/user";
+    public static final String USER_URI_TEMPLATE = USERS_URI_TEMPLATE + "/{userId}";
 
     private final UserService userService;
 
@@ -29,25 +28,26 @@ public class UserController {
         this.userService = notNull(userService);
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        var userEntity = userService.createUser(UserEntity.fromUser(user));
-
-        return ResponseEntity.created(URI.create(USER_URI + userEntity.getId()))
-                .body(userEntity.toUser());
+    // TODO add validation @Valid
+    @PostMapping(USERS_URI_TEMPLATE)
+    public Mono<ResponseEntity<User>> createUser(@RequestBody User user) {
+        return userService.createUser(UserEntity.of(user))
+                .map(userEntity -> ResponseEntity
+                        .created(new UriTemplate(USER_URI_TEMPLATE).expand(userEntity.getId()))
+                        .body(userEntity.toUser()));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable long userId) {
-        var userEntity = userService.getUser(userId);
-
-        return ResponseEntity.ok(userEntity.toUser());
+    @GetMapping(USER_URI_TEMPLATE)
+    public Mono<ResponseEntity<User>> getUser(@PathVariable String userId) {
+        // TODO is 404 returned when user is not found?
+        return userService.getUser(userId)
+                .map(userEntity -> ResponseEntity.ok(userEntity.toUser()));
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable long userId) {
-        userService.deleteUser(userId);
-
-        return ResponseEntity.noContent().build();
+    @DeleteMapping(USER_URI_TEMPLATE)
+    public Mono<ResponseEntity<?>> deleteUser(@PathVariable String userId) {
+        // TODO is 404 returned when user is not found?
+        return userService.deleteUser(userId)
+                .thenReturn(ResponseEntity.noContent().build());
     }
 }

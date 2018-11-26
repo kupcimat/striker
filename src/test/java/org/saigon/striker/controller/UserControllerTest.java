@@ -2,36 +2,39 @@ package org.saigon.striker.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.saigon.striker.model.UserEntity;
 import org.saigon.striker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.when;
 
-// TODO switch to reactive controller
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@WebFluxTest(UserController.class)
 @WithMockUser
 public class UserControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     @MockBean
     private UserService userService;
 
     @Test
-    public void getUser() throws Exception {
-        mockMvc.perform(get("/admin/user/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("user.username", is("user")))
-                .andExpect(jsonPath("user.password", is("password")));
+    public void getUser() {
+        when(userService.getUser("1"))
+                .thenReturn(Mono.just(new UserEntity("1", "username", "password")));
+
+        webTestClient.get().uri("/admin/user/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("user.username").isEqualTo("username")
+                .jsonPath("user.password").isEqualTo("password");
     }
 }

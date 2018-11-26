@@ -27,16 +27,14 @@ repositories {
 dependencies {
     compile("org.apache.commons:commons-lang3")
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-webflux")
 
-    runtime("com.h2database:h2")
-    runtime("org.flywaydb:flyway-core")
-    runtime("org.postgresql:postgresql")
-
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.springframework.security:spring-security-test")
+
+    testRuntime("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 }
 
 tasks {
