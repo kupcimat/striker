@@ -39,11 +39,6 @@ dependencies {
 }
 
 tasks {
-    val test by existing(Test::class)
-    val clean by existing
-    val bootJar by existing
-    val stage by registering
-
     test {
         if (System.getProperty("serverUrl") != null) {
             systemProperty("serverUrl", System.getProperty("serverUrl"))
@@ -56,14 +51,5 @@ tasks {
 
         testLogging.events = setOf(PASSED, SKIPPED, FAILED)
         testLogging.exceptionFormat = FULL
-    }
-
-    bootJar {
-        mustRunAfter(clean)
-    }
-
-    // task run by heroku
-    stage {
-        dependsOn(clean, bootJar)
     }
 }
