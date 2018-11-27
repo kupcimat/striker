@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
+import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Document(collection = "user")
@@ -20,6 +21,12 @@ public class UserEntity {
     public static UserEntity of(User user) {
         notNull(user);
         return new UserEntity(null, user.getUsername(), user.getPassword());
+    }
+
+    public static UserEntity of(String username, String password) {
+        notEmpty(username);
+        notEmpty(password);
+        return new UserEntity(null, username, password);
     }
 
     public UserEntity(String id, String username, String password) {

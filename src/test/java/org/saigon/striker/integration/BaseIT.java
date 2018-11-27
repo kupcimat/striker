@@ -1,8 +1,11 @@
 package org.saigon.striker.integration;
 
 import org.junit.Before;
+import org.saigon.striker.model.UserEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static java.lang.String.format;
@@ -21,21 +24,22 @@ public class BaseIT {
     @LocalServerPort
     private int port;
 
-    @Value("${spring.flyway.placeholders.test-user}")
+    @Value("${test.username}")
     private String username;
 
-    @Value("${spring.flyway.placeholders.test-password}")
+    @Value("${test.password}")
     private String password;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     protected WebTestClient webTestClient;
 
     @Before
     public void setUp() {
         checkSystemProperties();
-        webTestClient = WebTestClient.bindToServer()
-                .baseUrl(serverUrl())
-                .defaultHeaders(headers -> headers.setBasicAuth(username(), password()))
-                .build();
+        initMongoDB();
+        webTestClient = initWebClient();
     }
 
     protected String serverUrl() {
@@ -57,5 +61,18 @@ public class BaseIT {
                         "When '%s' system property is defined, then '%s' and '%s' must be defined as well",
                         SERVER_URL, USERNAME, PASSWORD));
         }
+    }
+
+    private void initMongoDB() {
+        if (isEmpty(System.getProperty(SERVER_URL))) {
+            mongoTemplate.insert(UserEntity.of(username, "{noop}" + password));
+        }
+    }
+
+    private WebTestClient initWebClient() {
+        return WebTestClient.bindToServer()
+                .baseUrl(serverUrl())
+                .defaultHeaders(headers -> headers.setBasicAuth(username(), password()))
+                .build();
     }
 }
