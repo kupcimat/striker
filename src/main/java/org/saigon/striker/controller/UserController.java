@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriTemplate;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 import static org.apache.commons.lang3.Validate.notNull;
 
-// TODO switch to reactive controller
 @RestController
 public class UserController {
 
@@ -28,20 +29,20 @@ public class UserController {
         this.userService = notNull(userService);
     }
 
-    // TODO add validation @Valid
+    // TODO customize validation error response
     @PostMapping(USERS_URI_TEMPLATE)
-    public Mono<ResponseEntity<User>> createUser(@RequestBody User user) {
+    public Mono<ResponseEntity<User>> createUser(@Valid @RequestBody User user) {
         return userService.createUser(UserEntity.of(user))
                 .map(userEntity -> ResponseEntity
                         .created(new UriTemplate(USER_URI_TEMPLATE).expand(userEntity.getId()))
-                        .body(userEntity.toUser()));
+                        .body(userEntity.toUser().withoutPassword()));
     }
 
     @GetMapping(USER_URI_TEMPLATE)
     public Mono<ResponseEntity<User>> getUser(@PathVariable String userId) {
         // TODO is 404 returned when user is not found?
         return userService.getUser(userId)
-                .map(userEntity -> ResponseEntity.ok(userEntity.toUser()));
+                .map(userEntity -> ResponseEntity.ok(userEntity.toUser().withoutPassword()));
     }
 
     @DeleteMapping(USER_URI_TEMPLATE)

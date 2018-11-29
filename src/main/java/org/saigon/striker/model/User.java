@@ -2,29 +2,41 @@ package org.saigon.striker.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
-
-import static org.apache.commons.lang3.Validate.notEmpty;
 
 @JsonTypeName("user")
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class User {
 
+    @NotNull
+    @Size(min = 4, max = 32)
     private final String username;
+
+    @NotNull
+    @Size(min = 8, max = 32)
     private final String password;
 
     @JsonCreator
     public User(@JsonProperty("username") String username,
                 @JsonProperty("password") String password) {
-        this.username = notEmpty(username);
-        this.password = notEmpty(password);
+        this.username = username;
+        this.password = password;
+    }
+
+    public User withoutPassword() {
+        return new User(this.username, null);
     }
 
     public String getUsername() {

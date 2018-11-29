@@ -24,23 +24,25 @@ public class UserEntity {
     }
 
     public static UserEntity of(String username, String password) {
-        notEmpty(username);
-        notEmpty(password);
         return new UserEntity(null, username, password);
     }
 
     public UserEntity(String id, String username, String password) {
         this.id = id;
-        this.username = username;
-        this.password = password;
+        this.username = notEmpty(username);
+        this.password = notEmpty(password);
+    }
+
+    public UserEntity withId(String id) {
+        return new UserEntity(notEmpty(id), this.username, this.password);
+    }
+
+    public UserEntity withPassword(String password) {
+        return new UserEntity(this.id, this.username, password);
     }
 
     public User toUser() {
         return new User(this.username, this.password);
-    }
-
-    public UserEntity withId(String id) {
-        return new UserEntity(id, this.username, this.password);
     }
 
     public String getId() {

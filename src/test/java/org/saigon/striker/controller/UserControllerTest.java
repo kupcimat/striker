@@ -34,7 +34,6 @@ public class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("user.username").isEqualTo("username")
-                .jsonPath("user.password").isEqualTo("password");
+                .jsonPath("user.username").isEqualTo("username");
     }
 }
