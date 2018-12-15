@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.saigon.striker.model.UserEntity;
 import org.saigon.striker.model.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -28,12 +29,14 @@ public class UserServiceTest {
     private static final String PASSWORD = "password";
     private static final UserEntity USER_ENTITY = new UserEntity(ID, USERNAME, PASSWORD);
 
-    @Mock
-    private UserRepository userRepository;
-    @InjectMocks
-    private UserService userService;
     @Captor
     private ArgumentCaptor<UserEntity> userEntityCaptor;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @InjectMocks
+    private UserService userService;
 
     @Test
     public void findByUsername() {
@@ -65,6 +68,7 @@ public class UserServiceTest {
 
     @Test
     public void createUser() {
+        when(passwordEncoder.encode(PASSWORD)).thenReturn("encodedPassword");
         when(userRepository.save(any())).thenReturn(Mono.just(USER_ENTITY));
 
         StepVerifier.create(userService.createUser(USER_ENTITY))
@@ -73,7 +77,7 @@ public class UserServiceTest {
 
         verify(userRepository).save(userEntityCaptor.capture());
         assertThat(userEntityCaptor.getValue().getUsername()).isEqualTo(USERNAME);
-        assertThat(userEntityCaptor.getValue().getPassword()).startsWith("{bcrypt}");
+        assertThat(userEntityCaptor.getValue().getPassword()).isEqualTo("encodedPassword");
     }
 
     @Test

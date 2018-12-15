@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static java.lang.String.format;
@@ -32,6 +33,9 @@ public class BaseIT {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     protected WebTestClient webTestClient;
 
@@ -65,7 +69,7 @@ public class BaseIT {
 
     private void initMongoDB() {
         if (isEmpty(System.getProperty(SERVER_URL))) {
-            mongoTemplate.insert(UserEntity.of(username, "{noop}" + password));
+            mongoTemplate.insert(UserEntity.of(username, passwordEncoder.encode(password)));
         }
     }
 
