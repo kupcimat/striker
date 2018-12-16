@@ -32,11 +32,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+    runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-
-    testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 }
 
 tasks {

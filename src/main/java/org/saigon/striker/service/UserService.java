@@ -40,6 +40,11 @@ public class UserService implements ReactiveUserDetailsService {
         return userRepository.findById(id);
     }
 
+    public Mono<UserEntity> getUserByUsername(String username) {
+        notEmpty(username);
+        return userRepository.findByUsername(username);
+    }
+
     public Mono<Void> deleteUser(String id) {
         notEmpty(id);
         return userRepository.deleteById(id);

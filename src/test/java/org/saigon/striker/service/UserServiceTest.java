@@ -109,6 +109,29 @@ public class UserServiceTest {
     }
 
     @Test
+    public void getUserByUsername() {
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Mono.just(USER_ENTITY));
+
+        StepVerifier.create(userService.getUserByUsername(USERNAME))
+                .assertNext(this::assertUserEntity)
+                .verifyComplete();
+    }
+
+    @Test
+    public void getUserByUsernameNotFound() {
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Mono.empty());
+
+        StepVerifier.create(userService.getUserByUsername(USERNAME))
+                .verifyComplete();
+    }
+
+    @Test
+    public void getUserByUsernameInvalid() {
+        assertThatNullPointerException().isThrownBy(() -> userService.getUserByUsername(null));
+        assertThatIllegalArgumentException().isThrownBy(() -> userService.getUserByUsername(""));
+    }
+
+    @Test
     public void deleteUser() {
         when(userRepository.deleteById(ID)).thenReturn(Mono.empty());
 

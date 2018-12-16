@@ -1,12 +1,8 @@
 package org.saigon.striker.integration;
 
 import org.junit.Before;
-import org.saigon.striker.model.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static java.lang.String.format;
@@ -25,25 +21,18 @@ public class BaseIT {
     @LocalServerPort
     private int port;
 
-    @Value("${test.username}")
+    @Value("${dev.username}")
     private String username;
 
-    @Value("${test.password}")
+    @Value("${dev.password}")
     private String password;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     protected WebTestClient webTestClient;
 
     @Before
     public void setUp() {
         checkSystemProperties();
-        initMongoDB();
-        webTestClient = initWebClient();
+        webTestClient = buildWebClient();
     }
 
     protected String serverUrl() {
@@ -67,13 +56,7 @@ public class BaseIT {
         }
     }
 
-    private void initMongoDB() {
-        if (isEmpty(System.getProperty(SERVER_URL))) {
-            mongoTemplate.insert(UserEntity.of(username, passwordEncoder.encode(password)));
-        }
-    }
-
-    private WebTestClient initWebClient() {
+    private WebTestClient buildWebClient() {
         return WebTestClient.bindToServer()
                 .baseUrl(serverUrl())
                 .defaultHeaders(headers -> headers.setBasicAuth(username(), password()))
