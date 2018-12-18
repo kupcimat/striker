@@ -29,7 +29,6 @@ public class UserController {
         this.userService = notNull(userService);
     }
 
-    // TODO customize validation error response
     @PostMapping(USERS_URI_TEMPLATE)
     public Mono<ResponseEntity<User>> createUser(@Valid @RequestBody User user) {
         return userService.createUser(UserEntity.of(user))
