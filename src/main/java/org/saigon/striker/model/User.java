@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -59,5 +60,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username, password);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("username", username)
+                .append("password", password)
+                .toString();
     }
 }

@@ -39,9 +39,9 @@ public class UserController {
 
     @GetMapping(USER_URI_TEMPLATE)
     public Mono<ResponseEntity<User>> getUser(@PathVariable String userId) {
-        // TODO is 404 returned when user is not found?
         return userService.getUser(userId)
-                .map(userEntity -> ResponseEntity.ok(userEntity.toUser().withoutPassword()));
+                .map(userEntity -> ResponseEntity.ok(userEntity.toUser().withoutPassword()))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(USER_URI_TEMPLATE)
