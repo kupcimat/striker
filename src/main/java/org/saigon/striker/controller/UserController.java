@@ -46,7 +46,6 @@ public class UserController {
 
     @DeleteMapping(USER_URI_TEMPLATE)
     public Mono<ResponseEntity<?>> deleteUser(@PathVariable String userId) {
-        // TODO is 404 returned when user is not found?
         return userService.deleteUser(userId)
                 .thenReturn(ResponseEntity.noContent().build());
     }

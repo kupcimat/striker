@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.saigon.striker.model.User;
 import org.saigon.striker.model.UserEntity;
 import org.saigon.striker.service.UserService;
+import org.saigon.striker.service.UsernameAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +22,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 @RunWith(SpringRunner.class)
 @WebFluxTest(UserController.class)
 @WithMockUser
+// TODO security config not applied!
 public class UserControllerTest {
 
     private static final String ID = "userId";
@@ -43,6 +45,17 @@ public class UserControllerTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(User.class).isEqualTo(new User(USERNAME, null));
+    }
+
+    @Test
+    public void createUserAlreadyExists() {
+        when(userService.createUser(any())).thenReturn(Mono.error(new UsernameAlreadyExistsException(USERNAME)));
+
+        webTestClient.mutateWith(csrf()).post().uri("/admin/user")
+                .syncBody(new User(USERNAME, PASSWORD))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ErrorResponse.class).value(errorResponse -> assertThat(errorResponse.getMessages()).hasSize(1));
     }
 
     @Test

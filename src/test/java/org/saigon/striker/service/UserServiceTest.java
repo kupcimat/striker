@@ -68,8 +68,9 @@ public class UserServiceTest {
 
     @Test
     public void createUser() {
-        when(passwordEncoder.encode(PASSWORD)).thenReturn("encodedPassword");
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Mono.empty());
         when(userRepository.save(any())).thenReturn(Mono.just(USER_ENTITY));
+        when(passwordEncoder.encode(PASSWORD)).thenReturn("encodedPassword");
 
         StepVerifier.create(userService.createUser(USER_ENTITY))
                 .assertNext(this::assertUserEntity)
@@ -78,6 +79,16 @@ public class UserServiceTest {
         verify(userRepository).save(userEntityCaptor.capture());
         assertThat(userEntityCaptor.getValue().getUsername()).isEqualTo(USERNAME);
         assertThat(userEntityCaptor.getValue().getPassword()).isEqualTo("encodedPassword");
+    }
+
+    @Test
+    public void createUserAlreadyExists() {
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Mono.just(USER_ENTITY));
+        when(userRepository.save(any())).thenReturn(Mono.just(USER_ENTITY));
+        when(passwordEncoder.encode(PASSWORD)).thenReturn("encodedPassword");
+
+        StepVerifier.create(userService.createUser(USER_ENTITY))
+                .verifyError(UsernameAlreadyExistsException.class);
     }
 
     @Test

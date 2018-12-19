@@ -31,8 +31,11 @@ public class UserService implements ReactiveUserDetailsService {
 
     public Mono<UserEntity> createUser(UserEntity userEntity) {
         notNull(userEntity);
-        return userRepository.save(userEntity.withPassword(
-                passwordEncoder.encode(userEntity.getPassword())));
+        return userRepository.findByUsername(userEntity.getUsername())
+                // if username already exists, map it as an error
+                .flatMap(ignore -> Mono.error(new UsernameAlreadyExistsException(userEntity.getUsername())))
+                .then(userRepository.save(userEntity.withPassword(
+                        passwordEncoder.encode(userEntity.getPassword()))));
     }
 
     public Mono<UserEntity> getUser(String id) {
