@@ -1,6 +1,7 @@
 package org.saigon.striker.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +11,7 @@ import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @Document(collection = "user")
+@TypeAlias("userEntity")
 public class UserEntity {
 
     @Id
