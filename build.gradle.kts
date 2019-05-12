@@ -6,7 +6,7 @@ version = "0.0.1-SNAPSHOT"
 
 plugins {
     java
-    id("org.springframework.boot") version "2.1.1.RELEASE"
+    id("org.springframework.boot") version "2.2.0.M2"
 }
 
 apply(plugin = "io.spring.dependency-management")
