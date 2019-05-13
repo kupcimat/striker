@@ -1,7 +1,7 @@
 package org.saigon.striker.controller;
 
 import org.saigon.striker.model.Hotel;
-import org.saigon.striker.model.agoda.AgodaHotel;
+import org.saigon.striker.model.AgodaHotel;
 import org.saigon.striker.service.AgodaService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
