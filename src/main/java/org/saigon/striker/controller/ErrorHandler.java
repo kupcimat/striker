@@ -1,5 +1,7 @@
 package org.saigon.striker.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -16,6 +18,8 @@ import static java.util.stream.Collectors.toList;
 @RestControllerAdvice
 public class ErrorHandler {
 
+    private static Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(WebExchangeBindException exception) {
         var errorMessages = Stream.concat(
@@ -29,6 +33,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(ResponseStatusException exception) {
+        logger.info("action=handle_exception", exception);
         return ResponseEntity.status(exception.getStatus())
                 .body(new ErrorResponse(exception.getReason()));
     }
