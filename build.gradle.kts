@@ -38,13 +38,29 @@ dependencies {
 
     runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+configurations {
+    testImplementation {
+        exclude(group = "junit", module = "junit")
+    }
 }
 
 tasks {
     test {
+        useJUnitPlatform()
+
+        testLogging {
+            events = setOf(PASSED, SKIPPED, FAILED)
+            exceptionFormat = FULL
+        }
+
         if (System.getProperty("serverUrl") != null) {
             systemProperty("serverUrl", System.getProperty("serverUrl"))
             systemProperty("username", System.getProperty("username"))
@@ -53,8 +69,5 @@ tasks {
         } else {
             filter.includeTestsMatching("*Test")
         }
-
-        testLogging.events = setOf(PASSED, SKIPPED, FAILED)
-        testLogging.exceptionFormat = FULL
     }
 }

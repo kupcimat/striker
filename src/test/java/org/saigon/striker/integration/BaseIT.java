@@ -1,6 +1,6 @@
 package org.saigon.striker.integration;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -29,7 +29,7 @@ public class BaseIT {
 
     protected WebTestClient webTestClient;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         checkSystemProperties();
         webTestClient = buildWebClient();
