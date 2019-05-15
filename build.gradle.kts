@@ -7,7 +7,7 @@ version = "0.0.1-SNAPSHOT"
 plugins {
     java
     kotlin("jvm") version "1.3.31"
-    id("org.springframework.boot") version "2.2.0.M2"
+    id("org.springframework.boot") version "2.2.0.M3"
 }
 
 apply(plugin = "io.spring.dependency-management")
