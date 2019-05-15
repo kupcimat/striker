@@ -55,7 +55,7 @@ public class UserControllerTest {
                 .syncBody(new User(USERNAME, PASSWORD))
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class).value(errorResponse -> assertThat(errorResponse.getMessages()).hasSize(1));
+                .expectBody().jsonPath("message").value(message -> assertThat(message).isEqualTo("Username 'username' already exists"), String.class);
     }
 
     @Test
@@ -65,14 +65,14 @@ public class UserControllerTest {
                 .syncBody(new User("a", "b"))
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class).value(errorResponse -> assertThat(errorResponse.getMessages()).hasSize(2));
+                .expectBody().jsonPath("message").value(message -> assertThat(message).contains("Validation failed"), String.class);
 
         // missing username and password
         webTestClient.mutateWith(csrf()).post().uri("/admin/user")
                 .syncBody(new User(null, null))
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(ErrorResponse.class).value(errorResponse -> assertThat(errorResponse.getMessages()).hasSize(2));
+                .expectBody().jsonPath("message").value(message -> assertThat(message).contains("Validation failed"), String.class);
     }
 
     @Test
