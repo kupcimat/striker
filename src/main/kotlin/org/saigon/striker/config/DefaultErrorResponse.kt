@@ -1,11 +1,9 @@
 package org.saigon.striker.config
 
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes
-import org.springframework.stereotype.Component
 import org.springframework.validation.BindingResult
 import org.springframework.web.reactive.function.server.ServerRequest
 
-@Component
 class DefaultErrorResponse : DefaultErrorAttributes() {
 
     override fun getErrorAttributes(request: ServerRequest, includeStackTrace: Boolean): Map<String, Any> {
