@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.List;
+
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
  * Base class for all integration tests.
@@ -59,6 +62,7 @@ public class BaseIT {
     private WebTestClient buildWebClient() {
         return WebTestClient.bindToServer()
                 .baseUrl(serverUrl())
+                .defaultHeaders(headers -> headers.setAccept(List.of(APPLICATION_JSON)))
                 .defaultHeaders(headers -> headers.setBasicAuth(username(), password()))
                 .build();
     }
