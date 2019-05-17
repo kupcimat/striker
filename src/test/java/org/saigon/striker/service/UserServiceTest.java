@@ -27,7 +27,7 @@ public class UserServiceTest {
     private static final String ID = "userId";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
-    private static final UserEntity USER_ENTITY = new UserEntity(ID, USERNAME, PASSWORD);
+    private static final UserEntity USER_ENTITY = new UserEntity(USERNAME, PASSWORD, ID);
 
     @Captor
     private ArgumentCaptor<UserEntity> userEntityCaptor;

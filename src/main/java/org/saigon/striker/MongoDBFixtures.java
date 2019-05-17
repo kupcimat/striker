@@ -33,7 +33,7 @@ public class MongoDBFixtures implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         userService.getUserByUsername(devUsername)
-                .switchIfEmpty(userService.createUser(UserEntity.of(devUsername, devPassword)))
+                .switchIfEmpty(userService.createUser(new UserEntity(devUsername, devPassword, null)))
                 .block(MONGODB_TIMEOUT);
     }
 }

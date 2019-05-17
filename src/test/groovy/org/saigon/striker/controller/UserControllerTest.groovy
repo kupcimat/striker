@@ -23,7 +23,7 @@ class UserControllerTest extends Specification {
     static final String USER_ID = "userId"
     static final String USERNAME = "username"
     static final String PASSWORD = "password"
-    static final UserEntity USER_ENTITY = new UserEntity(USER_ID, USERNAME, PASSWORD)
+    static final UserEntity USER_ENTITY = new UserEntity(USERNAME, PASSWORD, USER_ID)
 
     @Autowired
     WebTestClient webTestClient

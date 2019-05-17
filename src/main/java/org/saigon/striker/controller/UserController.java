@@ -1,7 +1,6 @@
 package org.saigon.striker.controller;
 
 import org.saigon.striker.model.User;
-import org.saigon.striker.model.UserEntity;
 import org.saigon.striker.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +15,8 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 import static org.apache.commons.lang3.Validate.notNull;
+import static org.saigon.striker.model.UserModelsKt.toEntity;
+import static org.saigon.striker.model.UserModelsKt.toUser;
 
 @RestController
 public class UserController {
@@ -31,16 +32,16 @@ public class UserController {
 
     @PostMapping(USERS_URI_TEMPLATE)
     public Mono<ResponseEntity<User>> createUser(@Valid @RequestBody User user) {
-        return userService.createUser(UserEntity.of(user))
+        return userService.createUser(toEntity(user))
                 .map(userEntity -> ResponseEntity
                         .created(new UriTemplate(USER_URI_TEMPLATE).expand(userEntity.getId()))
-                        .body(userEntity.toUser().withoutPassword()));
+                        .body(toUser(userEntity).withoutPassword()));
     }
 
     @GetMapping(USER_URI_TEMPLATE)
     public Mono<ResponseEntity<User>> getUser(@PathVariable String userId) {
         return userService.getUser(userId)
-                .map(userEntity -> ResponseEntity.ok(userEntity.toUser().withoutPassword()))
+                .map(userEntity -> ResponseEntity.ok(toUser(userEntity).withoutPassword()))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
