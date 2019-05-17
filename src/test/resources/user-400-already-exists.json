@@ -1,0 +1,8 @@
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Username 'username' already exists",
+  "path": "/admin/user",
+  "requestId": "${json-unit.matches:request-id}",
+  "timestamp": "${json-unit.matches:iso-date-time}"
+}

@@ -6,6 +6,7 @@ version = "0.0.1-SNAPSHOT"
 
 plugins {
     java
+    groovy
     kotlin("jvm") version "1.3.31"
     id("org.springframework.boot") version "2.2.0.M3"
 }
@@ -38,18 +39,17 @@ dependencies {
 
     runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
+    testImplementation("org.codehaus.groovy:groovy-all:2.5.7")
+    testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
+    testImplementation("org.spockframework:spock-spring:1.3-groovy-2.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("net.javacrumbs.json-unit:json-unit:2.6.1")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-}
-
-configurations {
-    testImplementation {
-        exclude(group = "junit", module = "junit")
-    }
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
 tasks {

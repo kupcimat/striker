@@ -1,0 +1,8 @@
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Error in object 'user' on field 'username': size must be between 4 and 32",
+  "path": "/admin/user",
+  "requestId": "${json-unit.matches:request-id}",
+  "timestamp": "${json-unit.matches:iso-date-time}"
+}
