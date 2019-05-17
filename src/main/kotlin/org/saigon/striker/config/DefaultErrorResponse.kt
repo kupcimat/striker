@@ -3,6 +3,7 @@ package org.saigon.striker.config
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes
 import org.springframework.validation.BindingResult
 import org.springframework.web.reactive.function.server.ServerRequest
+import java.time.Instant
 
 class DefaultErrorResponse : DefaultErrorAttributes() {
 
@@ -14,6 +15,7 @@ class DefaultErrorResponse : DefaultErrorAttributes() {
             errorResponse.remove("errors")
             errorResponse["message"] = createValidationErrorMessage(error)
         }
+        errorResponse["timestamp"] = Instant.now()
 
         return errorResponse
     }
