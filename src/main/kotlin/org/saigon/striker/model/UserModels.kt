@@ -40,6 +40,10 @@ data class UserEntity(@Indexed val username: String, val password: String, @Id v
     fun withPassword(password: String): UserEntity = copy(password = password)
 }
 
+enum class UserRoles {
+    USER
+}
+
 fun User.toEntity() = UserEntity(username!!, password!!)
 
 fun UserEntity.toUser() = User(username, password)

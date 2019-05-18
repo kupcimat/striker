@@ -2,6 +2,7 @@ package org.saigon.striker.service;
 
 import org.saigon.striker.model.UserEntity;
 import org.saigon.striker.model.UserRepository;
+import org.saigon.striker.model.UserRoles;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
