@@ -8,6 +8,7 @@ plugins {
     java
     groovy
     kotlin("jvm") version "1.3.31"
+    kotlin("plugin.spring") version "1.3.31"
     id("org.springframework.boot") version "2.2.0.M3"
 }
 
@@ -43,9 +44,9 @@ dependencies {
     testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
     testImplementation("org.spockframework:spock-spring:1.3-groovy-2.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("io.projectreactor:reactor-test")
     testImplementation("net.javacrumbs.json-unit:json-unit:2.6.1")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
@@ -53,6 +54,13 @@ dependencies {
 }
 
 tasks {
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "12"
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+        }
+    }
+
     test {
         useJUnitPlatform()
 
