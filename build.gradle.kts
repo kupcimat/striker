@@ -10,9 +10,8 @@ plugins {
     kotlin("jvm") version "1.3.31"
     kotlin("plugin.spring") version "1.3.31"
     id("org.springframework.boot") version "2.2.0.M3"
+    id("io.spring.dependency-management") version "1.0.7.RELEASE"
 }
-
-apply(plugin = "io.spring.dependency-management")
 
 java {
     sourceCompatibility = JavaVersion.VERSION_12
@@ -28,6 +27,18 @@ repositories {
     maven("http://repo.spring.io/milestone")
 }
 
+dependencyManagement {
+    dependencies {
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
+        dependency("org.codehaus.groovy:groovy-all:2.5.7")
+        dependencySet("org.spockframework:1.3-groovy-2.5") {
+            entry("spock-core")
+            entry("spock-spring")
+        }
+        dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
+    }
+}
+
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
@@ -40,14 +51,14 @@ dependencies {
 
     runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
-    testImplementation("org.codehaus.groovy:groovy-all:2.5.7")
-    testImplementation("org.spockframework:spock-core:1.3-groovy-2.5")
-    testImplementation("org.spockframework:spock-spring:1.3-groovy-2.5")
+    testImplementation("org.codehaus.groovy:groovy-all")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.spockframework:spock-core")
+    testImplementation("org.spockframework:spock-spring")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("net.javacrumbs.json-unit:json-unit:2.6.1")
+    testImplementation("net.javacrumbs.json-unit:json-unit")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
