@@ -1,7 +1,8 @@
 package org.saigon.striker.integration;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Value;
+import org.saigon.striker.FixturesProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -24,11 +25,8 @@ public class BaseIT {
     @LocalServerPort
     private int port;
 
-    @Value("${dev.username}")
-    private String username;
-
-    @Value("${dev.password}")
-    private String password;
+    @Autowired
+    private FixturesProperties properties;
 
     protected WebTestClient webTestClient;
 
@@ -43,11 +41,11 @@ public class BaseIT {
     }
 
     protected String username() {
-        return System.getProperty(USERNAME, username);
+        return System.getProperty(USERNAME, properties.getUsername());
     }
 
     protected String password() {
-        return System.getProperty(PASSWORD, password);
+        return System.getProperty(PASSWORD, properties.getPassword());
     }
 
     private void checkSystemProperties() {
