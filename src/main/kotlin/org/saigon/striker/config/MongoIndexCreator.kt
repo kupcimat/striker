@@ -1,15 +1,15 @@
 package org.saigon.striker.config
 
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.index.IndexResolver
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.util.TypeInformation
+import org.springframework.stereotype.Component
 
-@Configuration
-class MongoConfig(val mongoTemplate: MongoTemplate, val mongoMappingContext: MongoMappingContext) {
+@Component
+class MongoIndexCreator(val mongoTemplate: MongoTemplate, val mongoMappingContext: MongoMappingContext) {
 
     @EventListener(ApplicationReadyEvent::class)
     fun createIndices() {
