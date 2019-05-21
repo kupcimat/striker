@@ -8,6 +8,7 @@ plugins {
     java
     groovy
     kotlin("jvm") version "1.3.31"
+    kotlin("kapt") version "1.3.31"
     kotlin("plugin.spring") version "1.3.31"
     id("org.springframework.boot") version "2.2.0.M3"
     id("io.spring.dependency-management") version "1.0.7.RELEASE"
@@ -40,6 +41,8 @@ dependencyManagement {
 }
 
 dependencies {
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     implementation("org.apache.commons:commons-lang3")
