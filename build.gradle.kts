@@ -30,7 +30,10 @@ repositories {
 
 dependencyManagement {
     dependencies {
-        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
+        dependencySet("org.jetbrains.kotlinx:1.2.1") {
+            entry("kotlinx-coroutines-core")
+            entry("kotlinx-coroutines-reactive")
+        }
         dependency("org.codehaus.groovy:groovy-all:2.5.7")
         dependencySet("org.spockframework:1.3-groovy-2.5") {
             entry("spock-core")
@@ -45,6 +48,8 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
