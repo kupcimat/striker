@@ -27,18 +27,11 @@ data class User(
     @field: NotNull
     @field: Size(min = 8, max = 32)
     val password: String?
-) {
-    // TODO remove when UserController is migrated to Kotlin?
-    fun withoutPassword(): User = copy(password = null)
-}
+)
 
 @Document(collection = "user")
 @TypeAlias("userEntity")
-data class UserEntity(@Indexed val username: String, val password: String, @Id val id: String? = null) {
-
-    // TODO remove when UserService is migrated to Kotlin?
-    fun withPassword(password: String): UserEntity = copy(password = password)
-}
+data class UserEntity(@Indexed val username: String, val password: String, @Id val id: String? = null)
 
 enum class UserRoles {
     USER
@@ -46,4 +39,4 @@ enum class UserRoles {
 
 fun User.toEntity() = UserEntity(username!!, password!!)
 
-fun UserEntity.toUser() = User(username, password)
+fun UserEntity.toUserWithoutPassword() = User(username, password = null)

@@ -1,5 +1,6 @@
 package org.saigon.striker.controller
 
+import kotlin.coroutines.Continuation
 import org.saigon.striker.model.User
 import org.saigon.striker.model.UserEntity
 import org.saigon.striker.service.UserService
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.core.publisher.Mono
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -29,15 +29,15 @@ class UserControllerTest extends Specification {
     WebTestClient webTestClient
 
     @SpringBean
-    UserService userService = Stub()
+    UserService userService = Mock()
 
     @Unroll
     def "POST user (#expectedJson)"() {
         given:
-        userService.createUser(_ as UserEntity) >> mockedUser
+        userService.createUser(_ as UserEntity, _ as Continuation) >> { mockedUserSupplier() }
 
         expect:
-        api().post().uri("/admin/user")
+        api().post().uri("/admin/users")
                 .syncBody(inputUser)
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
@@ -52,43 +52,43 @@ class UserControllerTest extends Specification {
         new User(USERNAME, null)     | HttpStatus.BAD_REQUEST | "user-400-null-password.json"
         new User(USERNAME, "a")      | HttpStatus.BAD_REQUEST | "user-400-short-password.json"
 
-        mockedUser << [
-                Mono.just(USER_ENTITY),
-                Mono.error(new UsernameAlreadyExistsException(USERNAME)),
-                Mono.just(USER_ENTITY),
-                Mono.just(USER_ENTITY),
-                Mono.just(USER_ENTITY),
-                Mono.just(USER_ENTITY)
+        mockedUserSupplier << [
+                { USER_ENTITY },
+                { throw new UsernameAlreadyExistsException(USERNAME) },
+                { null },
+                { null },
+                { null },
+                { null }
         ]
     }
 
     @Unroll
     def "GET user (#expectedJson)"() {
         given:
-        userService.getUser(USER_ID) >> mockedUser
+        userService.getUser(USER_ID, _ as Continuation) >> mockedUser
 
         expect:
-        api().get().uri("/admin/user/{userId}", USER_ID)
+        api().get().uri("/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson))
 
         where:
-        mockedUser             | expectedStatus       | expectedJson
-        Mono.just(USER_ENTITY) | HttpStatus.OK        | "user-200-ok.json"
-        Mono.empty()           | HttpStatus.NOT_FOUND | "empty-response.json"
+        mockedUser  | expectedStatus       | expectedJson
+        USER_ENTITY | HttpStatus.OK        | "user-200-ok.json"
+        null        | HttpStatus.NOT_FOUND | "empty-response.json"
     }
 
     @Unroll
     def "DELETE user"() {
-        given:
-        userService.deleteUser(USER_ID) >> Mono.empty()
-
-        expect:
-        api().delete().uri("/admin/user/{userId}", USER_ID)
+        when:
+        api().delete().uri("/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isNoContent()
                 .expectBody().isEmpty()
+
+        then:
+        1 * userService.deleteUser(USER_ID, _ as Continuation)
     }
 
     WebTestClient api() {

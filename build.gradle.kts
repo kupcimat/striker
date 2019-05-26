@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.saigon"
 version = "0.0.1-SNAPSHOT"
@@ -33,6 +34,7 @@ dependencyManagement {
         dependencySet("org.jetbrains.kotlinx:1.2.1") {
             entry("kotlinx-coroutines-core")
             entry("kotlinx-coroutines-reactive")
+            entry("kotlinx-coroutines-reactor")
         }
         dependency("org.codehaus.groovy:groovy-all:2.5.7")
         dependencySet("org.spockframework:1.3-groovy-2.5") {
@@ -40,6 +42,7 @@ dependencyManagement {
             entry("spock-spring")
         }
         dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
+        dependency("io.mockk:mockk:1.9.3")
     }
 }
 
@@ -50,6 +53,7 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
@@ -60,20 +64,21 @@ dependencies {
     runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
     testImplementation("org.codehaus.groovy:groovy-all")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("io.projectreactor:reactor-test")
     testImplementation("net.javacrumbs.json-unit:json-unit")
+    testImplementation("io.mockk:mockk")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
 tasks {
-    compileKotlin {
+    withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "12"
             freeCompilerArgs = listOf("-Xjsr305=strict")
