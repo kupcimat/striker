@@ -16,7 +16,7 @@ data class FixturesProperties(
 )
 
 @Component
-@Profile("!heroku")
+@Profile(Profiles.NOT_HEROKU)
 class DBFixtures(val properties: FixturesProperties, val userService: UserService) {
 
     @EventListener(ApplicationReadyEvent::class)
