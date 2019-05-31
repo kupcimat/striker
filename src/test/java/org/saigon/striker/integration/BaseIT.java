@@ -1,7 +1,7 @@
 package org.saigon.striker.integration;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.saigon.striker.FixturesProperties;
+import org.saigon.striker.config.FixturesProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
