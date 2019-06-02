@@ -13,15 +13,29 @@ plugins {
     kotlin("plugin.spring") version "1.3.31"
     id("org.springframework.boot") version "2.2.0.M3"
     id("io.spring.dependency-management") version "1.0.7.RELEASE"
+    id("com.google.cloud.tools.jib") version "1.2.0"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_12
-    targetCompatibility = JavaVersion.VERSION_12
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 springBoot {
     buildInfo()
+}
+
+jib {
+    from {
+        image = "gcr.io/distroless/java:11"
+    }
+    to {
+        image = "registry.heroku.com/striker-vn/web"
+    }
+    container {
+        args = listOf("--spring.profiles.active=heroku")
+        jvmFlags = listOf("-Xmx300m", "-Xss512k", "-XX:CICompilerCount=2", "-Dfile.encoding=UTF-8")
+    }
 }
 
 repositories {
@@ -79,7 +93,7 @@ dependencies {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "12"
+            jvmTarget = "11"
             freeCompilerArgs = listOf("-Xjsr305=strict")
         }
     }
