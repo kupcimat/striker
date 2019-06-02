@@ -6,7 +6,7 @@ import org.hamcrest.TypeSafeMatcher
 
 import java.util.regex.Pattern
 
-import static org.apache.commons.lang3.Validate.notNull
+import static org.junit.platform.commons.util.Preconditions.notNull
 
 @CompileStatic
 class PatternMatcher extends TypeSafeMatcher<String> {
