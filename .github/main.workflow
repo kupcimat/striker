@@ -26,11 +26,20 @@ action "release-production" {
   }
 }
 
-action "verify-production" {
+action "health-check-production" {
   needs = "release-production"
-  uses = "actions/heroku@master"
-  args = ["apps:info", "--app=$HEROKU_APP"]
-  secrets = ["HEROKU_API_KEY"]
+  uses = "actions/bin/curl@master"
+  args = ["https://${HEROKU_APP}.herokuapp.com/actuator/health", "|", "grep UP"]
+  env = {
+    HEROKU_APP = "striker-vn"
+  }
+}
+
+action "verify-production" {
+  needs = "health-check-production"
+  uses = "MrRamych/gradle-actions/openjdk-12@2.1"
+  args = ["test", "-DserverUrl=https://${HEROKU_APP}.herokuapp.com", "-Dusername=$TEST_USERNAME", "-Dpassword=$TEST_PASSWORD"]
+  secrets = ["TEST_USERNAME", "TEST_PASSWORD"]
   env = {
     HEROKU_APP = "striker-vn"
   }
