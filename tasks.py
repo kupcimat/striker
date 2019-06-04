@@ -2,6 +2,9 @@ from typing import Iterable
 
 from invoke import task
 
+# TODO add tests
+heroku_app = "striker-vn"
+
 
 @task
 def build_image(ctx):
@@ -20,7 +23,7 @@ def deploy_heroku(ctx, username, password):
     ctx.run(gradle("jib",
                    f"-Djib.to.auth.username={username}",
                    f"-Djib.to.auth.password={password}"))
-    ctx.run(heroku("container:release web", "--app=striker-vn"))
+    ctx.run(heroku("container:release web", f"--app={heroku_app}"))
 
 
 @task(help={"username": "Application test user username",
@@ -30,7 +33,7 @@ def run_tests(ctx, username, password):
     Run integration tests
     """
     ctx.run(gradle("test",
-                   "-DserverUrl=https://striker-vn.herokuapp.com",
+                   f"-DserverUrl=https://{heroku_app}.herokuapp.com",
                    f"-Dusername={username}",
                    f"-Dpassword={password}"))
 
