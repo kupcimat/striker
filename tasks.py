@@ -6,19 +6,18 @@ from invoke import task
 @task
 def build_image(ctx):
     """
-    Build docker image
+    Build docker image locally
     """
     ctx.run(gradle("jibDockerBuild"))
 
 
-@task(build_image)
-def deploy_heroku(ctx):
+@task(help={"username": "Heroku docker registry username",
+            "password": "Heroku docker registry password"})
+def deploy_heroku(ctx, username, password):
     """
     Deploy docker image on heroku
     """
-    # TODO replace with direct upload from jib
-    ctx.run(heroku("container:login"))
-    ctx.run(docker("push registry.heroku.com/striker-vn/web"))
+    ctx.run(gradle("jib", f"-Djib.to.auth.username={username}", f"-Djib.to.auth.password={password}"))
     ctx.run(heroku("container:release web", "--app=striker-vn"))
 
 
