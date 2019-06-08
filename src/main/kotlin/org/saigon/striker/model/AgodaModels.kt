@@ -13,6 +13,8 @@ data class AgodaHotel(val id: Long,
                       val name: String,
                       val rooms: List<Room>)
 
+fun AgodaHotel.toHotel() = Hotel(id, name, rooms)
+
 class AgodaHotelDeserializer : JsonObjectDeserializer<AgodaHotel>() {
 
     @Throws(IOException::class)
