@@ -13,11 +13,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static org.saigon.striker.TestUtils.api
 import static org.saigon.striker.TestUtils.jsonEquals
-import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf
-import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockUser
 
-@WebFluxTest(UserController.class)
+@WebFluxTest(UserController)
 class UserControllerTest extends Specification {
 
     static final String USER_ID = "userId"
@@ -37,7 +36,7 @@ class UserControllerTest extends Specification {
         userService.createUser(_ as UserEntity, _ as Continuation) >> { mockedUserSupplier() }
 
         expect:
-        api().post().uri("/admin/users")
+        api(webTestClient).post().uri("/admin/users")
                 .syncBody(inputUser)
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
@@ -68,7 +67,7 @@ class UserControllerTest extends Specification {
         userService.getUser(USER_ID, _ as Continuation) >> mockedUser
 
         expect:
-        api().get().uri("/admin/users/$USER_ID")
+        api(webTestClient).get().uri("/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson))
@@ -79,21 +78,14 @@ class UserControllerTest extends Specification {
         null        | HttpStatus.NOT_FOUND | "empty-response.json"
     }
 
-    @Unroll
     def "DELETE user"() {
         when:
-        api().delete().uri("/admin/users/$USER_ID")
+        api(webTestClient).delete().uri("/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isNoContent()
                 .expectBody().isEmpty()
 
         then:
         1 * userService.deleteUser(USER_ID, _ as Continuation)
-    }
-
-    WebTestClient api() {
-        return webTestClient
-                .mutateWith(csrf())
-                .mutateWith(mockUser())
     }
 }
