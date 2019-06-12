@@ -2,6 +2,7 @@ package org.saigon.striker.server
 
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
+import java.io.File
 
 @Serializable
 data class MockConfiguration(
@@ -19,10 +20,8 @@ data class MockResponse(
     val cookies: Map<String, String> = mapOf()
 )
 
-fun yamlConfiguration(configurationFile: String): MockConfiguration {
-    // TODO how to read file resources
-    val yaml = MockConfiguration::class.java.getResource(configurationFile).readText()
-    return Yaml.default.parse(MockConfiguration.serializer(), yaml)
+fun yamlConfiguration(configuration: File): MockConfiguration {
+    return Yaml.default.parse(MockConfiguration.serializer(), configuration.readText())
 }
 
 fun mockConfiguration(configure: PathsBuilder.() -> Unit): MockConfiguration {
