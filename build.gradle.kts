@@ -11,6 +11,7 @@ plugins {
     kotlin("jvm") version "1.3.31"
     kotlin("kapt") version "1.3.31"
     kotlin("plugin.spring") version "1.3.31"
+    id("kotlinx-serialization") version "1.3.31"
     id("org.springframework.boot") version "2.2.0.M3"
     id("io.spring.dependency-management") version "1.0.7.RELEASE"
     id("com.google.cloud.tools.jib") version "1.2.0"
@@ -50,12 +51,18 @@ dependencyManagement {
             entry("kotlinx-coroutines-reactive")
             entry("kotlinx-coroutines-reactor")
         }
+
+        // Test dependencies
         dependency("org.codehaus.groovy:groovy-all:2.5.7")
+        // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
         dependencySet("org.spockframework:1.3-groovy-2.5") {
             entry("spock-core")
             entry("spock-spring")
         }
         dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.0")
+        dependency("com.charleskorn.kaml:kaml:0.11.0")
+        dependency("io.ktor:ktor-server-netty:1.2.1")
         dependency("io.mockk:mockk:1.9.3")
     }
 }
@@ -84,6 +91,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("net.javacrumbs.json-unit:json-unit")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime")
+    testImplementation("com.charleskorn.kaml:kaml")
+    testImplementation("io.ktor:ktor-server-netty")
     testImplementation("io.mockk:mockk")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
