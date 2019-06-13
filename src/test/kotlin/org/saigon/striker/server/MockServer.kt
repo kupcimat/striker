@@ -11,40 +11,51 @@ import io.ktor.routing.Route
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
+import io.ktor.server.engine.applicationEngineEnvironment
+import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import kotlinx.coroutines.runBlocking
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-fun withServerBlocking(configuration: MockConfiguration, action: suspend () -> Unit) {
-    val server = startMockServer(configuration)
-    try {
-        runBlocking { action() }
-    } finally {
-        stopMockServer(server)
-    }
-}
+val logger: Logger = LoggerFactory.getLogger("MockServer")
 
-fun startMockServer(configuration: MockConfiguration, port: Int = 8080): ApplicationEngine {
-    return embeddedServer(Netty, port = port, module = configureMainModule(configuration)).start(wait = false)
+fun startMockServer(host: String = "0.0.0.0", port: Int = 8080): ApplicationEngine {
+    logger.info("Starting server at $host:$port")
+    val environment = applicationEngineEnvironment {
+        connector {
+            this.host = host
+            this.port = port
+        }
+    }
+    return embeddedServer(Netty, environment).start(wait = false)
 }
 
 fun stopMockServer(server: ApplicationEngine) {
+    logger.info("Stopping server")
     server.stop(gracePeriod = 1L, timeout = 1L, timeUnit = TimeUnit.SECONDS)
 }
 
-fun configureMainModule(configuration: MockConfiguration): Application.() -> Unit {
-    return {
-        routing {
-            // log request matching
-            trace { application.log.debug(it.buildText()) }
-            mockServerRoutes(configuration)
-        }
+fun ApplicationEngine.configure(configuration: MockConfiguration) {
+    logger.info("Applying $configuration")
+    // Reload application environment
+    environment.stop()
+    environment.start()
+    // Register application module
+    application.mainModule(configuration)
+}
+
+private fun Application.mainModule(configuration: MockConfiguration) {
+    routing {
+        // Log request matching
+        trace { application.log.debug(it.buildText()) }
+        mockRoutes(configuration)
     }
 }
 
-fun Route.mockServerRoutes(configuration: MockConfiguration) {
+private fun Route.mockRoutes(configuration: MockConfiguration) {
     for ((path, methods) in configuration.paths) {
         for ((method, response) in methods) {
             route(path, parseMethod(method)) {
@@ -61,7 +72,7 @@ fun Route.mockServerRoutes(configuration: MockConfiguration) {
     }
 }
 
-fun parseMethod(method: String): HttpMethod {
+private fun parseMethod(method: String): HttpMethod {
     return HttpMethod.DefaultMethods.find { it.value == method.toUpperCase() }
         ?: throw IllegalArgumentException("Unsupported HTTP method: $method")
 }
