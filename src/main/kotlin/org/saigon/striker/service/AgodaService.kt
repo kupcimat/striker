@@ -4,6 +4,7 @@ import org.saigon.striker.model.AgodaHotel
 import org.saigon.striker.model.Hotel
 import org.saigon.striker.model.toHotel
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_HTML
 import org.springframework.stereotype.Component
@@ -12,20 +13,23 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitEntity
 import org.springframework.web.reactive.function.client.awaitExchange
 import org.springframework.web.util.UriComponentsBuilder
+import reactor.core.publisher.Mono
 
 @Component
-class AgodaService(webClientBuilder: WebClient.Builder) {
+class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https://www.agoda.com") {
 
     private val cookieName = "agoda.version.03"
     private val cookieIdRegex = Regex("CookieId=([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})")
 
-    val webClient = webClientBuilder.baseUrl("https://www.agoda.com").build()
+    val webClient = webClientBuilder.baseUrl(baseUrl).build()
 
     suspend fun getHotel(currency: String): Hotel {
         val agodaHotel = webClient.get().uri(createUri())
             .accept(APPLICATION_JSON)
             .cookie(cookieName, createCookie(getCookieId(), currency))
-            .retrieve().awaitBody<AgodaHotel>()
+            .retrieve()
+            .onStatus(HttpStatus::isError) { Mono.just(AgodaApiException(it.statusCode())) }
+            .awaitBody<AgodaHotel>()
 
         return agodaHotel.toHotel()
     }
@@ -37,6 +41,9 @@ class AgodaService(webClientBuilder: WebClient.Builder) {
         // retrieve body to release resources
         val responseEntity = response.awaitEntity<String>()
 
+        if (responseEntity.statusCode.isError) {
+            throw AgodaApiException(responseEntity.statusCode)
+        }
         return getCookieId(responseEntity.headers[HttpHeaders.SET_COOKIE])
     }
 
