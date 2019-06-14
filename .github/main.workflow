@@ -9,7 +9,7 @@ action "master-branch-filter" {
   args = "branch master"
 }
 
-# tmp
+# temporary
 action "debug" {
   needs = "master-branch-filter"
   uses = "actions/bin/debug@master"
