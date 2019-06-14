@@ -1,0 +1,28 @@
+{
+  "hotel": {
+    "id": 1,
+    "name": "my-hotel",
+    "rooms": [
+      {
+        "room": {
+          "id": 1,
+          "name": "my-room-1",
+          "variants": [
+            {
+              "variant": {
+                "id": "my-room-variant-1",
+                "pricePerNight": 1.0,
+                "priceTotal": 2.0,
+                "currency": "VND",
+                "payLater": false,
+                "payAtHotel": false,
+                "freeCancellation": false,
+                "breakfastIncluded": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

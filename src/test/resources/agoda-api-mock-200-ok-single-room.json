@@ -1,0 +1,28 @@
+{
+  "hotelId": 1,
+  "hotelInfo": {
+    "name": "my-hotel"
+  },
+  "roomGridData": {
+    "masterRooms": [
+      {
+        "id": 1,
+        "name": "my-room-1",
+        "rooms": [
+          {
+            "uid": "my-room-variant-1",
+            "inclusivePrice": {
+              "display": 1.0
+            },
+            "totalPrice": {
+              "display": 2.0
+            },
+            "currency": "VND",
+            "isFreeCancellation": false,
+            "isBreakfastIncluded": false
+          }
+        ]
+      }
+    ]
+  }
+}
