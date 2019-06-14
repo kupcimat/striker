@@ -1,4 +1,4 @@
-package org.saigon.striker.server
+package org.saigon.striker.utils
 
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -38,6 +38,10 @@ fun stopMockServer(server: ApplicationEngine) {
     server.stop(gracePeriod = 1L, timeout = 1L, timeUnit = TimeUnit.SECONDS)
 }
 
+fun ApplicationEngine.configure(builder: PathsBuilder.() -> Unit) {
+    configure(mockConfiguration(builder))
+}
+
 fun ApplicationEngine.configure(configuration: MockConfiguration) {
     logger.info("Applying $configuration")
     // Reload application environment
@@ -61,11 +65,9 @@ private fun Route.mockRoutes(configuration: MockConfiguration) {
             route(path, parseMethod(method)) {
                 handle {
                     call.response.status(HttpStatusCode.fromValue(response.status))
-                    response.headers.forEach { call.response.headers.append(name = it.key, value = it.value) }
-                    response.cookies.forEach {
-                        call.response.cookies.append(name = it.key, value = it.value, encoding = CookieEncoding.RAW)
-                    }
-                    call.respondFile(File(javaClass.getResource(response.content).file))
+                    response.headers.forEach { call.response.headers.append(it.key, it.value) }
+                    response.cookies.forEach { call.response.cookies.append(it.key, it.value, CookieEncoding.RAW) }
+                    call.respondFile(File(javaClass.getResource("/${response.content}").file))
                 }
             }
         }
