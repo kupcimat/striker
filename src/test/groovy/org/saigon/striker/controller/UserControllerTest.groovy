@@ -13,8 +13,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static org.saigon.striker.TestUtils.api
-import static org.saigon.striker.TestUtils.jsonEquals
+import static org.saigon.striker.utils.TestUtilsKt.api
+import static org.saigon.striker.utils.TestUtilsKt.jsonEquals
 
 @WebFluxTest(UserController)
 class UserControllerTest extends Specification {
