@@ -108,6 +108,11 @@ tasks {
         }
     }
 
+    compileTestGroovy {
+        // Groovy tests depend on kotlin test utils
+        classpath += files(compileTestKotlin.get().destinationDir)
+    }
+
     test {
         useJUnitPlatform()
 

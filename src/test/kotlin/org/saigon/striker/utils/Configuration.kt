@@ -1,4 +1,4 @@
-package org.saigon.striker.server
+package org.saigon.striker.utils
 
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
@@ -35,6 +35,12 @@ class PathsBuilder {
 
     fun path(name: String, builder: MethodsBuilder.() -> Unit) {
         paths[name] = MethodsBuilder().build(builder)
+    }
+
+    fun get(path: String, builder: ResponseBuilder.() -> Unit) {
+        path(path) {
+            get(builder)
+        }
     }
 
     fun build(builder: PathsBuilder.() -> Unit): MockConfiguration {

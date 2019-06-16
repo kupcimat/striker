@@ -1,0 +1,48 @@
+{
+  "hotel": {
+    "id": 1,
+    "name": "my-hotel",
+    "rooms": [
+      {
+        "room": {
+          "id": 1,
+          "name": "my-room-1",
+          "variants": [
+            {
+              "variant": {
+                "id": "my-room-variant-1",
+                "pricePerNight": 1.0,
+                "priceTotal": 2.0,
+                "currency": "VND",
+                "payLater": false,
+                "payAtHotel": false,
+                "freeCancellation": false,
+                "breakfastIncluded": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "room": {
+          "id": 2,
+          "name": "my-room-2",
+          "variants": [
+            {
+              "variant": {
+                "id": "my-room-variant-2",
+                "pricePerNight": 3.0,
+                "priceTotal": 4.0,
+                "currency": "VND",
+                "payLater": true,
+                "payAtHotel": true,
+                "freeCancellation": true,
+                "breakfastIncluded": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
