@@ -9,8 +9,15 @@ action "master-branch-filter" {
   args = "branch master"
 }
 
-action "build-production" {
+# Skip duplicate push event
+action "not-deleted-filter" {
   needs = "master-branch-filter"
+  uses = "actions/bin/filter@master"
+  args = "not deleted"
+}
+
+action "build-production" {
+  needs = "not-deleted-filter"
   uses = "MrRamych/gradle-actions/openjdk-12@2.1"
   args = ["jib", "-Djib.to.auth.username=_", "-Djib.to.auth.password=$HEROKU_API_KEY"]
   secrets = ["HEROKU_API_KEY"]
