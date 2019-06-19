@@ -46,24 +46,18 @@ repositories {
 
 dependencyManagement {
     dependencies {
-        dependencySet("org.jetbrains.kotlinx:1.2.1") {
-            entry("kotlinx-coroutines-core")
-            entry("kotlinx-coroutines-reactive")
-            entry("kotlinx-coroutines-reactor")
-        }
-
-        // Test dependencies
         dependency("org.codehaus.groovy:groovy-all:2.5.7")
-        // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
-        dependencySet("org.spockframework:1.3-groovy-2.5") {
-            entry("spock-core")
-            entry("spock-spring")
-        }
-        dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.2.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.1")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.0")
-        dependency("com.charleskorn.kaml:kaml:0.11.0")
+        // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
+        dependency("org.spockframework:spock-core:1.3-groovy-2.5")
+        dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
         dependency("io.ktor:ktor-server-netty:1.2.1")
         dependency("io.mockk:mockk:1.9.3")
+        dependency("com.charleskorn.kaml:kaml:0.11.0")
+        dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
     }
 }
 
