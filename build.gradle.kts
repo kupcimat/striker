@@ -1,6 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.saigon.striker.gradle.DependenciesUpgradeTask
 
 group = "org.saigon"
 version = "0.0.1-SNAPSHOT"
@@ -8,13 +9,13 @@ version = "0.0.1-SNAPSHOT"
 plugins {
     java
     groovy
-    kotlin("jvm") version "1.3.31"
-    kotlin("kapt") version "1.3.31"
-    kotlin("plugin.spring") version "1.3.31"
-    id("kotlinx-serialization") version "1.3.31"
-    id("org.springframework.boot") version "2.2.0.M3"
-    id("io.spring.dependency-management") version "1.0.7.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.2.0"
+    kotlin("jvm") version "1.3.40"
+    kotlin("kapt") version "1.3.40"
+    kotlin("plugin.spring") version "1.3.40"
+    id("kotlinx-serialization") version "1.3.40"
+    id("org.springframework.boot") version "2.2.0.M4"
+    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("com.google.cloud.tools.jib") version "1.3.0"
 }
 
 java {
@@ -46,24 +47,18 @@ repositories {
 
 dependencyManagement {
     dependencies {
-        dependencySet("org.jetbrains.kotlinx:1.2.1") {
-            entry("kotlinx-coroutines-core")
-            entry("kotlinx-coroutines-reactive")
-            entry("kotlinx-coroutines-reactor")
-        }
-
-        // Test dependencies
         dependency("org.codehaus.groovy:groovy-all:2.5.7")
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2")
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.2.2")
+        dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.2")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1")
         // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
-        dependencySet("org.spockframework:1.3-groovy-2.5") {
-            entry("spock-core")
-            entry("spock-spring")
-        }
-        dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
-        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.0")
-        dependency("com.charleskorn.kaml:kaml:0.11.0")
-        dependency("io.ktor:ktor-server-netty:1.2.1")
+        dependency("org.spockframework:spock-core:1.3-groovy-2.5")
+        dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
+        dependency("io.ktor:ktor-server-netty:1.2.2")
         dependency("io.mockk:mockk:1.9.3")
+        dependency("com.charleskorn.kaml:kaml:0.11.0")
+        dependency("net.javacrumbs.json-unit:json-unit:2.7.0")
     }
 }
 
@@ -101,6 +96,10 @@ dependencies {
 }
 
 tasks {
+    register<DependenciesUpgradeTask>("upgradeDependencies") {
+        buildFiles = listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
+    }
+
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "11"
