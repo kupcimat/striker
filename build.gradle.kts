@@ -15,7 +15,7 @@ plugins {
     id("kotlinx-serialization") version "1.3.40"
     id("org.springframework.boot") version "2.2.0.M4"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.2.0"
+    id("com.google.cloud.tools.jib") version "1.3.0"
 }
 
 java {
@@ -58,7 +58,7 @@ dependencyManagement {
         dependency("io.ktor:ktor-server-netty:1.2.2")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.11.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.6.1")
+        dependency("net.javacrumbs.json-unit:json-unit:2.7.0")
     }
 }
 
