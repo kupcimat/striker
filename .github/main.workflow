@@ -62,14 +62,20 @@ action "upgrade-dependencies-gradle" {
   args = ["upgradeDependencies"]
 }
 
+# Skip commit if there are no changes
 action "upgrade-dependencies-commit" {
   needs = "upgrade-dependencies-gradle"
   uses = "actions/bin/sh@master"
-  args = ["git checkout -b upgrade-dependencies", "git commit -am 'Upgrade dependencies'"]
+  args = [
+    "git diff --quiet && exit 78 || exit 0",
+    "git checkout -b upgrade-dependencies",
+    "git commit -am 'Upgrade dependencies'"
+  ]
 }
 
 action "upgrade-dependencies-pr" {
   needs = "upgrade-dependencies-commit"
   uses = "elgohr/Github-Hub-Action@1.0"
   args = ["pull-request", "--no-edit", "--push", "--labels dependencies"]
+  secrets = ["GITHUB_TOKEN"]
 }
