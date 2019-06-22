@@ -3,6 +3,11 @@ workflow "Deploy on Heroku" {
   resolves = ["verify-production"]
 }
 
+workflow "Upgrade dependencies" {
+  on = "schedule(0 0 */3 * *)"
+  resolves = ["upgrade-dependencies-pr"]
+}
+
 # Push to master
 action "master-branch-filter" {
   uses = "actions/bin/filter@master"
@@ -50,4 +55,21 @@ action "verify-production" {
   env = {
     HEROKU_APP = "striker-vn"
   }
+}
+
+action "upgrade-dependencies-gradle" {
+  uses = "MrRamych/gradle-actions/openjdk-12@2.1"
+  args = ["upgradeDependencies"]
+}
+
+action "upgrade-dependencies-commit" {
+  needs = "upgrade-dependencies-gradle"
+  uses = "actions/bin/sh@master"
+  args = ["git checkout -b upgrade-dependencies", "git commit -am 'Upgrade dependencies'"]
+}
+
+action "upgrade-dependencies-pr" {
+  needs = "upgrade-dependencies-commit"
+  uses = "elgohr/Github-Hub-Action@1.0"
+  args = ["pull-request", "--no-edit", "--push", "--labels dependencies"]
 }
