@@ -7,30 +7,30 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.http.URLBuilder
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.*
+import kotlinx.serialization.internal.StringDescriptor
 import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.text.RegexOption.IGNORE_CASE
 
 @Serializable
-data class MavenSearchResult(
-    val response: MavenArtifacts
-) {
-    val latestVersions = response.docs.map(MavenArtifact::v)
-}
-
-@Serializable
-data class MavenArtifacts(
-    val docs: List<MavenArtifact>
-)
-
-@Serializable
 data class MavenArtifact(
-    val g: String,
-    val a: String,
-    val v: String
+    val versions: List<String>
 )
+
+@Serializable
+data class MavenSearchResult(
+    val artifacts: List<MavenArtifact>
+) {
+    @Serializer(MavenSearchResult::class)
+    companion object : KSerializer<MavenSearchResult> {
+        override val descriptor: SerialDescriptor = StringDescriptor.withName("MavenSearchResult")
+
+        override fun deserialize(decoder: Decoder): MavenSearchResult {
+            return MavenSearchResult(MavenArtifact.serializer().list.deserialize(decoder))
+        }
+    }
+}
 
 suspend fun upgradeVersions(buildFile: File) {
     val pluginRegex = Regex("""(id|kotlin)\("(.+)"\) version "(.+)"""")
@@ -79,13 +79,17 @@ suspend fun findLatestPluginVersion(pluginId: String): String? {
 }
 
 suspend fun findLatestDependencyVersion(group: String, name: String): String? {
-    val result = withHttpClient {
-        it.get<MavenSearchResult>(createMavenSearchUri(group, name))
+    for (repoOwner in listOf("kotlin", "groovy", "bintray")) {
+        val result = withHttpClient {
+            it.get<MavenSearchResult>(createMavenSearchUri(group, name, repoOwner))
+        }
+        if (result.artifacts.isNotEmpty()) {
+            return result.artifacts.first().versions
+                .filter(::isStableVersion)
+                .firstOrNull(::isCompatibleVersion)
+        }
     }
-
-    return result.latestVersions
-        .filter(::isStableVersion)
-        .firstOrNull(::isCompatibleVersion)
+    return null
 }
 
 suspend fun <T> withHttpClient(block: suspend (HttpClient) -> T): T {
@@ -111,11 +115,10 @@ fun createGradleSearchUri(pluginId: String): String {
     }.buildString()
 }
 
-fun createMavenSearchUri(group: String, name: String, rows: Int = 5): String {
-    return URLBuilder("https://search.maven.org/solrsearch/select").apply {
-        parameters.append("q", """g:"$group" AND a:"$name"""")
-        parameters.append("rows", rows.toString())
-        parameters.append("core", "gav")
-        parameters.append("wt", "json")
+fun createMavenSearchUri(group: String, name: String, repoOwner: String): String {
+    return URLBuilder("https://api.bintray.com/search/packages/maven").apply {
+        parameters.append("g", group)
+        parameters.append("a", name)
+        parameters.append("subject", repoOwner)
     }.buildString()
 }
