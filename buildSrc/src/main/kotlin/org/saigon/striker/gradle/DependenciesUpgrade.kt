@@ -54,9 +54,10 @@ suspend fun upgradePluginVersion(line: String, matchResult: MatchResult): String
     val resolvedId = if (type == "kotlin") "org.jetbrains.kotlin.$id" else id
 
     val latestVersion = findLatestPluginVersion(resolvedId)
+    val updateVersion = if ((latestVersion != null) && (latestVersion > version)) latestVersion else version
     println("Plugin $resolvedId current=$version latest=${latestVersion ?: "NOT_FOUND"}")
 
-    return line.replace(version, latestVersion ?: version)
+    return line.replace(version, updateVersion)
 }
 
 suspend fun upgradeDependencyVersion(line: String, matchResult: MatchResult): String {
