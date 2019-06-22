@@ -2,10 +2,10 @@ package org.saigon.striker.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import net.javacrumbs.jsonunit.JsonMatchers
-import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
-import org.saigon.striker.utils.PatternMatcher.Companion.matchesPattern
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.matchesPattern
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockUser
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -32,7 +32,7 @@ fun jsonEquals(expectedJsonFile: String): Matcher<String> {
 
     // In case of no content return null matcher
     if (fileContent.isEmpty()) {
-        return CoreMatchers.nullValue(String::class.java)
+        return Matchers.nullValue(String::class.java)
     }
     return JsonMatchers.jsonStringEquals(fileContent)
         .withMatcher("request-id", matchesPattern(RegexPatterns.REQUEST_ID))
