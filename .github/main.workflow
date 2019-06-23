@@ -65,12 +65,8 @@ action "upgrade-dependencies-gradle" {
 # Skip commit if there are no changes
 action "upgrade-dependencies-commit" {
   needs = "upgrade-dependencies-gradle"
-  uses = "actions/bin/sh@master"
-  args = [
-    "git diff --quiet && exit 78 || exit 0",
-    "git checkout -b upgrade-dependencies",
-    "git commit -am 'Upgrade dependencies'"
-  ]
+  uses = "srt32/git-actions@v0.0.3"
+  args = [".github/upgrade-dependencies-commit.sh"]
 }
 
 action "upgrade-dependencies-pr" {
