@@ -15,6 +15,7 @@ import kotlin.text.RegexOption.IGNORE_CASE
 
 @Serializable
 data class MavenArtifact(
+    val owner: String,
     val versions: List<String>
 )
 
@@ -79,17 +80,18 @@ suspend fun findLatestPluginVersion(pluginId: String): String? {
 }
 
 suspend fun findLatestDependencyVersion(group: String, name: String): String? {
-    for (repoOwner in listOf("kotlin", "groovy", "bintray")) {
-        val result = withHttpClient {
-            it.get<MavenSearchResult>(createMavenSearchUri(group, name, repoOwner))
-        }
-        if (result.artifacts.isNotEmpty()) {
-            return result.artifacts.first().versions
-                .filter(::isStableVersion)
-                .firstOrNull(::isCompatibleVersion)
-        }
+    val result = withHttpClient {
+        it.get<MavenSearchResult>(createMavenSearchUri(group, name))
     }
-    return null
+
+    val preferredRepoOwners = listOf("kotlin", "groovy", "bintray")
+    val artifact = preferredRepoOwners.fold(null as MavenArtifact?) { selectedArtifact, preferredOwner ->
+        selectedArtifact ?: result.artifacts.find { it.owner == preferredOwner }
+    }
+
+    return artifact?.versions
+        ?.filter(::isStableVersion)
+        ?.firstOrNull(::isCompatibleVersion)
 }
 
 suspend fun <T> withHttpClient(block: suspend (HttpClient) -> T): T {
@@ -115,10 +117,9 @@ fun createGradleSearchUri(pluginId: String): String {
     }.buildString()
 }
 
-fun createMavenSearchUri(group: String, name: String, repoOwner: String): String {
+fun createMavenSearchUri(group: String, name: String): String {
     return URLBuilder("https://api.bintray.com/search/packages/maven").apply {
         parameters.append("g", group)
         parameters.append("a", name)
-        parameters.append("subject", repoOwner)
     }.buildString()
 }
