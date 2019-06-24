@@ -5,6 +5,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.lang.System.getProperty
 import java.nio.charset.StandardCharsets.UTF_8
+import java.time.Duration
 
 /**
  * Base class for all integration tests.
@@ -32,6 +33,7 @@ open class SetupIT(properties: FixturesProperties? = null, port: Int? = null) {
         .baseUrl(serverUrl)
         .defaultHeaders { it.accept = listOf(APPLICATION_JSON) }
         .defaultHeaders { it.setBasicAuth(username, password, UTF_8) }
+        .responseTimeout(Duration.ofSeconds(30L))
         .build()
 
     private fun validateLocalRunProperties(properties: FixturesProperties?, port: Int?) {
