@@ -84,12 +84,7 @@ suspend fun findLatestDependencyVersion(group: String, name: String): String? {
         it.get<MavenSearchResult>(createMavenSearchUri(group, name))
     }
 
-    val preferredRepoOwners = listOf("kotlin", "groovy", "bintray")
-    val artifact = preferredRepoOwners.fold(null as MavenArtifact?) { selectedArtifact, preferredOwner ->
-        selectedArtifact ?: result.artifacts.find { it.owner == preferredOwner }
-    }
-
-    return artifact?.versions
+    return findPreferredArtifact(result)?.versions
         ?.filter(::isStableVersion)
         ?.firstOrNull(::isCompatibleVersion)
 }
@@ -99,6 +94,13 @@ suspend fun <T> withHttpClient(block: suspend (HttpClient) -> T): T {
         install(JsonFeature) { serializer = KotlinxSerializer(Json.nonstrict) }
     }
     return client.use { block(it) }
+}
+
+fun findPreferredArtifact(result: MavenSearchResult): MavenArtifact? {
+    val preferredRepoOwners = listOf("kotlin", "groovy", "bintray")
+    return preferredRepoOwners.fold(null as MavenArtifact?) { selectedArtifact, preferredOwner ->
+        selectedArtifact ?: result.artifacts.find { it.owner == preferredOwner }
+    }
 }
 
 fun isStableVersion(version: String): Boolean {
