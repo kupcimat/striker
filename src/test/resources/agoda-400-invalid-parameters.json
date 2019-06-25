@@ -1,0 +1,8 @@
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "${json-unit.matches:error-message}",
+  "path": "/agoda",
+  "requestId": "${json-unit.matches:request-id}",
+  "timestamp": "${json-unit.matches:iso-date-time}"
+}

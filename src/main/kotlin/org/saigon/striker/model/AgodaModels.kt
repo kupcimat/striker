@@ -8,6 +8,16 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import org.springframework.boot.jackson.JsonObjectDeserializer
 import java.io.IOException
 
+data class AgodaParameters(
+    val hotelId: Int,
+    val checkInDate: String,
+    val lengthOfStay: Int,
+    val rooms: Int,
+    val adults: Int,
+    val children: Int,
+    val currency: String
+)
+
 @JsonDeserialize(using = AgodaHotelDeserializer::class)
 data class AgodaHotel(
     val id: Long,

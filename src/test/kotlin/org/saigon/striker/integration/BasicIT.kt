@@ -15,11 +15,19 @@ interface BasicScenario {
 
     @Test
     fun `call agoda api`() {
-        // TODO dependency on agoda api?
-        webTestClient.get().uri("/agoda")
+        val queryParamsString = mapOf(
+            "hotelId" to "1",
+            "checkInDate" to "2019-09-09",
+            "lengthOfStay" to "4",
+            "rooms" to "1",
+            "adults" to "2",
+            "children" to "0"
+        ).entries.joinToString(separator = "&")
+
+        webTestClient.get().uri("/agoda?$queryParamsString")
             .exchange()
             .expectStatus().isOk
-            .expectBody<Void>()
+            .expectBody<String>()
     }
 }
 

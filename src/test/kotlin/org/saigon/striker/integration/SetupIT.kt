@@ -16,6 +16,7 @@ open class SetupIT(properties: FixturesProperties? = null, port: Int? = null) {
     private val serverUrlProperty = "serverUrl"
     private val usernameProperty = "username"
     private val passwordProperty = "password"
+    private val webClientTimeout = Duration.ofSeconds(30)
 
     init {
         if (getProperty(serverUrlProperty).isNullOrEmpty()) {
@@ -33,7 +34,7 @@ open class SetupIT(properties: FixturesProperties? = null, port: Int? = null) {
         .baseUrl(serverUrl)
         .defaultHeaders { it.accept = listOf(APPLICATION_JSON) }
         .defaultHeaders { it.setBasicAuth(username, password, UTF_8) }
-        .responseTimeout(Duration.ofSeconds(30L))
+        .responseTimeout(webClientTimeout)
         .build()
 
     private fun validateLocalRunProperties(properties: FixturesProperties?, port: Int?) {
