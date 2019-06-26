@@ -17,15 +17,16 @@ data class MockResponse(
     val status: Int,
     val content: String,
     val headers: Map<String, String> = mapOf(),
-    val cookies: Map<String, String> = mapOf()
+    val cookies: Map<String, String> = mapOf(),
+    val queryParams: Map<String, String> = mapOf()
 )
 
 fun yamlConfiguration(configuration: File): MockConfiguration {
     return Yaml.default.parse(MockConfiguration.serializer(), configuration.readText())
 }
 
-fun mockConfiguration(configure: PathsBuilder.() -> Unit): MockConfiguration {
-    return PathsBuilder().build(configure)
+fun mockConfiguration(builder: PathsBuilder.() -> Unit): MockConfiguration {
+    return PathsBuilder().build(builder)
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -75,6 +76,7 @@ class ResponseBuilder {
     var content: String = ""
     var headers = mutableMapOf<String, String>()
     var cookies = mutableMapOf<String, String>()
+    var queryParams = mutableMapOf<String, String>()
 
     fun header(name: String, value: String) {
         headers[name] = value
@@ -84,8 +86,12 @@ class ResponseBuilder {
         cookies[name] = value
     }
 
+    fun queryParam(name: String, value: String) {
+        queryParams[name] = value
+    }
+
     fun build(builder: ResponseBuilder.() -> Unit): MockResponse {
         builder(this)
-        return MockResponse(status, content, headers, cookies)
+        return MockResponse(status, content, headers, cookies, queryParams)
     }
 }

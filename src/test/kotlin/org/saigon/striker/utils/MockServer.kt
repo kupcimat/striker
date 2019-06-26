@@ -7,14 +7,13 @@ import io.ktor.http.CookieEncoding
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondFile
-import io.ktor.routing.Route
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.routing.*
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.pipeline.ContextDsl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -63,11 +62,13 @@ private fun Route.mockRoutes(configuration: MockConfiguration) {
     for ((path, methods) in configuration.paths) {
         for ((method, response) in methods) {
             route(path, parseMethod(method)) {
-                handle {
-                    call.response.status(HttpStatusCode.fromValue(response.status))
-                    response.headers.forEach { call.response.headers.append(it.key, it.value) }
-                    response.cookies.forEach { call.response.cookies.append(it.key, it.value, CookieEncoding.RAW) }
-                    call.respondFile(File(javaClass.getResource("/${response.content}").file))
+                params(response.queryParams) {
+                    handle {
+                        call.response.status(HttpStatusCode.fromValue(response.status))
+                        response.headers.forEach { call.response.headers.append(it.key, it.value) }
+                        response.cookies.forEach { call.response.cookies.append(it.key, it.value, CookieEncoding.RAW) }
+                        call.respondFile(File(javaClass.getResource("/${response.content}").file))
+                    }
                 }
             }
         }
@@ -77,4 +78,24 @@ private fun Route.mockRoutes(configuration: MockConfiguration) {
 private fun parseMethod(method: String): HttpMethod {
     return HttpMethod.DefaultMethods.find { it.value == method.toUpperCase() }
         ?: throw IllegalArgumentException("Unsupported HTTP method: $method")
+}
+
+@ContextDsl
+private fun Route.params(queryParameters: Map<String, String>, build: Route.() -> Unit): Route {
+    val selector = ConstantParametersRouteSelector(queryParameters)
+    return createChild(selector).apply(build)
+}
+
+private class ConstantParametersRouteSelector(val queryParameters: Map<String, String>) :
+    RouteSelector(RouteSelectorEvaluation.qualityConstant) {
+
+    override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation {
+        val callContainsAllParameters = queryParameters.all { context.call.parameters.contains(it.key, it.value) }
+        if (callContainsAllParameters) {
+            return RouteSelectorEvaluation.Constant
+        }
+        return RouteSelectorEvaluation.Failed
+    }
+
+    override fun toString(): String = "[${queryParameters.entries.joinToString()}]"
 }
