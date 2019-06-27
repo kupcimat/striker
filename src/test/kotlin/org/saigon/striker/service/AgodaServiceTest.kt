@@ -8,6 +8,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.saigon.striker.model.AgodaParameters
 import org.saigon.striker.utils.assertJson
 import org.saigon.striker.utils.configure
 import org.saigon.striker.utils.startMockServer
@@ -79,12 +80,19 @@ class AgodaServiceTest {
                 cookie(name = "agoda.version.03", value = "CookieId=12345678-1234-1234-1234-1234567890ab")
             }
             get("/api/en-us/pageparams/property") {
+                queryParam("hotel_id", "42")
+                queryParam("checkIn", "2020-05-25")
+                queryParam("los", "1")
+                queryParam("rooms", "2")
+                queryParam("adults", "3")
+                queryParam("childs", "4")
+
                 status = 200
                 content = apiMockJson
             }
         }
 
-        val hotel = agodaService.getHotel("VND")
+        val hotel = agodaService.getHotel(AgodaParameters(42, "2020-05-25", 1, 2, 3, 4, "VND"))
 
         assertJson(hotel, expectedJson)
     }
@@ -110,7 +118,7 @@ class AgodaServiceTest {
         }
 
         val exception = assertThrows<AgodaApiException> {
-            runBlocking { agodaService.getHotel("VND") }
+            runBlocking { agodaService.getHotel(AgodaParameters(0, "", 0, 0, 0, 0, "")) }
         }
 
         assertThat(exception).hasMessageContaining(exceptionMessage)

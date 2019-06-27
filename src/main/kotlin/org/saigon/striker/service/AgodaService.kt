@@ -1,6 +1,7 @@
 package org.saigon.striker.service
 
 import org.saigon.striker.model.AgodaHotel
+import org.saigon.striker.model.AgodaParameters
 import org.saigon.striker.model.Hotel
 import org.saigon.striker.model.toHotel
 import org.springframework.http.HttpHeaders
@@ -23,10 +24,10 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
 
     val webClient = webClientBuilder.baseUrl(baseUrl).build()
 
-    suspend fun getHotel(currency: String): Hotel {
-        val agodaHotel = webClient.get().uri(createUri())
+    suspend fun getHotel(parameters: AgodaParameters): Hotel {
+        val agodaHotel = webClient.get().uri(createUri(parameters))
             .accept(APPLICATION_JSON)
-            .cookie(cookieName, createCookie(getCookieId(), currency))
+            .cookie(cookieName, createCookie(getCookieId(), parameters.currency))
             .retrieve()
             .onStatus(HttpStatus::isError) { Mono.just(AgodaApiException(it.statusCode())) }
             .awaitBody<AgodaHotel>()
@@ -59,13 +60,14 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
         return "CookieId=$cookieId&CurLabel=$currency"
     }
 
-    // TODO parametrize
-    private fun createUri(): String = UriComponentsBuilder.fromPath("/api/en-us/pageparams/property")
-        .queryParam("hotel_id", "1157572")
-        .queryParam("checkIn", "2018-12-05")
-        .queryParam("los", "7")
-        .queryParam("rooms", "1")
-        .queryParam("adults", "2")
-        .queryParam("childs", "0")
-        .toUriString()
+    private fun createUri(parameters: AgodaParameters): String {
+        return UriComponentsBuilder.fromPath("/api/en-us/pageparams/property")
+            .queryParam("hotel_id", parameters.hotelId)
+            .queryParam("checkIn", parameters.checkInDate)
+            .queryParam("los", parameters.lengthOfStay)
+            .queryParam("rooms", parameters.rooms)
+            .queryParam("adults", parameters.adults)
+            .queryParam("childs", parameters.children)
+            .toUriString()
+    }
 }
