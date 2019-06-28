@@ -76,8 +76,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-
     testImplementation("org.codehaus.groovy:groovy-all")
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
@@ -91,6 +89,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-netty")
     testImplementation("io.mockk:mockk")
 
+    testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }

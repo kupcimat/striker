@@ -2,8 +2,14 @@ from typing import Iterable
 
 from invoke import task
 
+
 # TODO add tests
-heroku_app = "striker-vn"
+@task
+def start_mongo(ctx):
+    """
+    Start local mongo db in docker
+    """
+    ctx.run(docker_compose("up mongo"))
 
 
 @task
@@ -14,9 +20,18 @@ def build_image(ctx):
     ctx.run(gradle("jibDockerBuild"))
 
 
+@task(build_image)
+def deploy_local(ctx):
+    """
+    Build docker image and run it locally
+    """
+    ctx.run(docker_compose("up"))
+
+
 @task(help={"username": "Heroku docker registry username",
-            "password": "Heroku docker registry password"})
-def deploy_heroku(ctx, username, password):
+            "password": "Heroku docker registry password",
+            "heroku-app": "Heroku application name (optional)"})
+def deploy_heroku(ctx, username, password, heroku_app="striker-vn"):
     """
     Deploy docker image on heroku
     """
@@ -27,8 +42,9 @@ def deploy_heroku(ctx, username, password):
 
 
 @task(help={"username": "Application test user username",
-            "password": "Application test user password"})
-def run_tests(ctx, username, password):
+            "password": "Application test user password",
+            "heroku-app": "Heroku application name (optional)"})
+def run_tests(ctx, username, password, heroku_app="striker-vn"):
     """
     Run integration tests
     """
@@ -42,8 +58,8 @@ def gradle(*arguments: str) -> str:
     return f"./gradlew {join(arguments)}"
 
 
-def docker(*arguments: str) -> str:
-    return f"docker {join(arguments)}"
+def docker_compose(*arguments: str) -> str:
+    return f"docker-compose {join(arguments)}"
 
 
 def heroku(*arguments: str) -> str:
