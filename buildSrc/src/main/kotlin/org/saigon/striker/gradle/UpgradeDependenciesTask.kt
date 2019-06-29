@@ -5,11 +5,11 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class DependenciesUpgradeTask : DefaultTask() {
+open class UpgradeDependenciesTask : DefaultTask() {
 
     init {
         group = "Util"
-        description = "Upgrades dependencies in build file"
+        description = "Upgrades dependencies in build files"
     }
 
     var buildFiles = listOf<String>()

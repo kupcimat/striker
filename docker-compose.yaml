@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  web:
+    image: registry.heroku.com/striker-vn/web
+    depends_on:
+      - mongo
+    environment:
+      PORT: "8080"
+      MONGODB_URI: "mongodb://mongo/test"
+    ports:
+      - "8080:8080"
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

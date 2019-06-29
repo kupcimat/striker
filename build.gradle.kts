@@ -1,7 +1,9 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.saigon.striker.gradle.DependenciesUpgradeTask
+import org.saigon.striker.gradle.PrintBuildVersionTask
+import org.saigon.striker.gradle.UpgradeDependenciesTask
+import org.saigon.striker.gradle.getLatestGitCommit
 
 group = "org.saigon"
 version = "0.0.1-SNAPSHOT"
@@ -24,7 +26,13 @@ java {
 }
 
 springBoot {
-    buildInfo()
+    buildInfo {
+        properties {
+            val commit = getLatestGitCommit(projectDir)
+            time = commit.time
+            version = commit.hash
+        }
+    }
 }
 
 jib {
@@ -76,8 +84,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-    runtimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-
     testImplementation("org.codehaus.groovy:groovy-all")
     testImplementation("org.spockframework:spock-core")
     testImplementation("org.spockframework:spock-spring")
@@ -91,12 +97,14 @@ dependencies {
     testImplementation("io.ktor:ktor-server-netty")
     testImplementation("io.mockk:mockk")
 
+    testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
 tasks {
-    register<DependenciesUpgradeTask>("upgradeDependencies") {
+    register<PrintBuildVersionTask>("printBuildVersion")
+    register<UpgradeDependenciesTask>("upgradeDependencies") {
         buildFiles = listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
     }
 
