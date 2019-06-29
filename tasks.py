@@ -1,5 +1,6 @@
-from typing import Iterable
+from typing import Any, Iterable
 
+import requests
 from invoke import task
 
 
@@ -54,6 +55,18 @@ def run_tests(ctx, username, password, heroku_app="striker-vn"):
                    f"-Dpassword={password}"))
 
 
+@task(help={"heroku-app": "Heroku application name (optional)"})
+def run_health_check(ctx, heroku_app="striker-vn"):
+    """
+    Run application health check
+    """
+    health = get_json(f"https://{heroku_app}.herokuapp.com/actuator/health")
+    info = get_json(f"https://{heroku_app}.herokuapp.com/actuator/info")
+
+    print(f"Status  = {safe_get(health, 'status')}")
+    print(f"Version = {safe_get(info, 'build', 'version')} ({safe_get(info, 'build', 'time')})")
+
+
 def gradle(*arguments: str) -> str:
     return f"./gradlew {join(arguments)}"
 
@@ -68,3 +81,19 @@ def heroku(*arguments: str) -> str:
 
 def join(arguments: Iterable[str]) -> str:
     return " ".join(arguments)
+
+
+def get_json(url: str) -> dict:
+    response = requests.get(url)
+    print(f"GET {url} ({response.status_code} {response.reason})")
+    return response.json()
+
+
+def safe_get(json: Any, *path: str) -> Any:
+    if len(path) == 0:
+        return json
+    else:
+        if path[0] in json:
+            return safe_get(json[path[0]], *path[1:])
+        else:
+            return safe_get("unknown")
