@@ -1,7 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.saigon.striker.gradle.DependenciesUpgradeTask
+import org.saigon.striker.gradle.UpgradeDependenciesTask
 
 group = "org.saigon"
 version = "0.0.1-SNAPSHOT"
@@ -95,7 +95,7 @@ dependencies {
 }
 
 tasks {
-    register<DependenciesUpgradeTask>("upgradeDependencies") {
+    register<UpgradeDependenciesTask>("upgradeDependencies") {
         buildFiles = listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
     }
 
