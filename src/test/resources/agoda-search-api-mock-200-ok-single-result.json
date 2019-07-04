@@ -1,0 +1,12 @@
+{
+  "ViewModelList": [
+    {
+      "ObjectId": 1,
+      "DisplayNames": {
+        "Name": "my-name-1",
+        "GeoHierarchyName": "my-location-1",
+        "CategoryName": "Property"
+      }
+    }
+  ]
+}

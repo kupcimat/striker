@@ -123,4 +123,47 @@ class AgodaServiceTest {
 
         assertThat(exception).hasMessageContaining(exceptionMessage)
     }
+
+    @CsvSource(
+        "agoda-search-api-mock-200-ok-single-result.json, agoda-search-200-ok-single-result.json",
+        "agoda-search-api-mock-200-ok-multiple-results.json, agoda-search-200-ok-multiple-results.json"
+    )
+    @ParameterizedTest
+    fun `agoda search`(apiMockJson: String, expectedJson: String) = runBlocking<Unit> {
+        mockServer.configure {
+            get("/Search/Search/GetUnifiedSuggestResult/3/1/1/0/en-us") {
+                queryParam("searchText", "query")
+                queryParam("isHotelLandSearch", "true")
+
+                status = 200
+                content = apiMockJson
+            }
+        }
+
+        val searchResult = agodaService.search("query")
+
+        assertJson(searchResult, expectedJson)
+    }
+
+    @CsvSource(
+        "400, empty-response.json, Agoda API error: 400 BAD_REQUEST",
+        "404, empty-response.json, Agoda API error: 404 NOT_FOUND",
+        "500, empty-response.json, Agoda API error: 500 INTERNAL_SERVER_ERROR",
+        "504, empty-response.json, Agoda API error: 504 GATEWAY_TIMEOUT"
+    )
+    @ParameterizedTest
+    fun `agoda search with error`(responseStatus: Int, responseContent: String, exceptionMessage: String) {
+        mockServer.configure {
+            get("/Search/Search/GetUnifiedSuggestResult/3/1/1/0/en-us") {
+                status = responseStatus
+                content = responseContent
+            }
+        }
+
+        val exception = assertThrows<AgodaApiException> {
+            runBlocking { agodaService.search("query") }
+        }
+
+        assertThat(exception).hasMessageContaining(exceptionMessage)
+    }
 }

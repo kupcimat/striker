@@ -1,0 +1,14 @@
+{
+  "searchResult": {
+    "items": [
+      {
+        "item": {
+          "id": 1,
+          "name": "my-name-1",
+          "location": "my-location-1",
+          "category": "Property"
+        }
+      }
+    ]
+  }
+}
