@@ -2,6 +2,7 @@ package org.saigon.striker.controller
 
 import org.saigon.striker.model.AgodaParameters
 import org.saigon.striker.model.Hotel
+import org.saigon.striker.model.SearchResult
 import org.saigon.striker.service.AgodaService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,5 +25,12 @@ class AgodaController(val agodaService: AgodaService) {
         val parameters = AgodaParameters(hotelId, checkInDate, lengthOfStay, rooms, adults, children, currency)
 
         return ResponseEntity.ok(agodaService.getHotel(parameters))
+    }
+
+    @GetMapping(UriTemplates.AGODA_SEARCH)
+    suspend fun search(
+        @RequestParam query: String
+    ): ResponseEntity<SearchResult> {
+        return ResponseEntity.ok(agodaService.search(query))
     }
 }

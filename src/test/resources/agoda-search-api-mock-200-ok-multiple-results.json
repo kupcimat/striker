@@ -1,0 +1,26 @@
+{
+  "ViewModelList": [
+    {
+      "no-display-names": null
+    },
+    {
+      "DisplayNames": null
+    },
+    {
+      "ObjectId": 1,
+      "DisplayNames": {
+        "Name": "my-name-1",
+        "GeoHierarchyName": "my-location-1",
+        "CategoryName": "Property"
+      }
+    },
+    {
+      "ObjectId": 2,
+      "DisplayNames": {
+        "Name": "my-name-2",
+        "GeoHierarchyName": "my-location-2",
+        "CategoryName": "Landmark"
+      }
+    }
+  ]
+}

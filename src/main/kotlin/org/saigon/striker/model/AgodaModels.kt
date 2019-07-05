@@ -25,7 +25,14 @@ data class AgodaHotel(
     val rooms: List<Room>
 )
 
+@JsonDeserialize(using = AgodaSearchResultDeserializer::class)
+data class AgodaSearchResult(
+    val items: List<SearchItem>
+)
+
 fun AgodaHotel.toHotel() = Hotel(id, name, rooms)
+
+fun AgodaSearchResult.toSearchResult() = SearchResult(items)
 
 class AgodaHotelDeserializer : JsonObjectDeserializer<AgodaHotel>() {
 
@@ -44,7 +51,7 @@ class AgodaHotelDeserializer : JsonObjectDeserializer<AgodaHotel>() {
                 getRequiredNode(roomNode, "name").textValue(),
                 getRoomVariants(getRequiredNode(roomNode, "rooms"))
             )
-        }.toList()
+        }
 
         return AgodaHotel(hotelId, hotelName, rooms)
     }
@@ -59,7 +66,31 @@ class AgodaHotelDeserializer : JsonObjectDeserializer<AgodaHotel>() {
                 roomVariantNode.get("payLater")?.let { getRequiredNode(it, "isAvailable").booleanValue() } ?: false,
                 roomVariantNode.get("payAtHotel")?.let { getRequiredNode(it, "isAvailable").booleanValue() } ?: false,
                 getRequiredNode(roomVariantNode, "isFreeCancellation").booleanValue(),
-                getRequiredNode(roomVariantNode, "isBreakfastIncluded").booleanValue())
-        }.toList()
+                getRequiredNode(roomVariantNode, "isBreakfastIncluded").booleanValue()
+            )
+        }
+    }
+}
+
+class AgodaSearchResultDeserializer : JsonObjectDeserializer<AgodaSearchResult>() {
+
+    @Throws(IOException::class)
+    override fun deserializeObject(
+        jsonParser: JsonParser, context: DeserializationContext, codec: ObjectCodec, tree: JsonNode
+    ): AgodaSearchResult {
+
+        val items = getRequiredNode(tree, "ViewModelList")
+            .filter { it.hasNonNull("DisplayNames") }
+            .map { item ->
+                val displayNames = item.get("DisplayNames")
+                SearchItem(
+                    getRequiredNode(item, "ObjectId").longValue(),
+                    getRequiredNode(displayNames, "Name").textValue(),
+                    getRequiredNode(displayNames, "GeoHierarchyName").textValue(),
+                    getRequiredNode(displayNames, "CategoryName").textValue()
+                )
+            }
+
+        return AgodaSearchResult(items)
     }
 }

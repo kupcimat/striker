@@ -37,3 +37,20 @@ data class RoomVariant(
     val freeCancellation: Boolean,
     val breakfastIncluded: Boolean
 )
+
+@JsonTypeName("searchResult")
+@JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class SearchResult(
+    val items: List<SearchItem>
+)
+
+@JsonTypeName("item")
+@JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class SearchItem(
+    val id: Long,
+    val name: String,
+    val location: String,
+    val category: String
+)

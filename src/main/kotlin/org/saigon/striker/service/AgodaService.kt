@@ -1,9 +1,6 @@
 package org.saigon.striker.service
 
-import org.saigon.striker.model.AgodaHotel
-import org.saigon.striker.model.AgodaParameters
-import org.saigon.striker.model.Hotel
-import org.saigon.striker.model.toHotel
+import org.saigon.striker.model.*
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -14,7 +11,6 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitEntity
 import org.springframework.web.reactive.function.client.awaitExchange
 import org.springframework.web.util.UriComponentsBuilder
-import reactor.core.publisher.Mono
 
 @Component
 class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https://www.agoda.com") {
@@ -25,22 +21,34 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
     val webClient = webClientBuilder.baseUrl(baseUrl).build()
 
     suspend fun getHotel(parameters: AgodaParameters): Hotel {
-        val agodaHotel = webClient.get().uri(createUri(parameters))
+        val agodaHotel = webClient.get()
+            .uri(createHotelUri(parameters))
             .accept(APPLICATION_JSON)
             .cookie(cookieName, createCookie(getCookieId(), parameters.currency))
             .retrieve()
-            .onStatus(HttpStatus::isError) { Mono.just(AgodaApiException(it.statusCode())) }
+            .onStatus(HttpStatus::isError) { Exceptions.handleAgodaError(it) }
             .awaitBody<AgodaHotel>()
 
         return agodaHotel.toHotel()
     }
 
+    suspend fun search(query: String): SearchResult {
+        val agodaSearchResult = webClient.get()
+            .uri(createSearchUri(query))
+            .accept(APPLICATION_JSON)
+            .retrieve()
+            .onStatus(HttpStatus::isError) { Exceptions.handleAgodaError(it) }
+            .awaitBody<AgodaSearchResult>()
+
+        return agodaSearchResult.toSearchResult()
+    }
+
     suspend fun getCookieId(): String {
-        val response = webClient.get().uri("/")
+        val responseEntity = webClient.get()
+            .uri("/")
             .accept(TEXT_HTML)
             .awaitExchange()
-        // retrieve body to release resources
-        val responseEntity = response.awaitEntity<String>()
+            .awaitEntity<String>() // retrieve body to release resources
 
         if (responseEntity.statusCode.isError) {
             throw AgodaApiException(responseEntity.statusCode)
@@ -60,7 +68,7 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
         return "CookieId=$cookieId&CurLabel=$currency"
     }
 
-    private fun createUri(parameters: AgodaParameters): String {
+    private fun createHotelUri(parameters: AgodaParameters): String {
         return UriComponentsBuilder.fromPath("/api/en-us/pageparams/property")
             .queryParam("hotel_id", parameters.hotelId)
             .queryParam("checkIn", parameters.checkInDate)
@@ -68,6 +76,13 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
             .queryParam("rooms", parameters.rooms)
             .queryParam("adults", parameters.adults)
             .queryParam("childs", parameters.children)
+            .toUriString()
+    }
+
+    private fun createSearchUri(query: String): String {
+        return UriComponentsBuilder.fromPath("/Search/Search/GetUnifiedSuggestResult/3/1/1/0/en-us")
+            .queryParam("searchText", query)
+            .queryParam("isHotelLandSearch", "true")
             .toUriString()
     }
 }
