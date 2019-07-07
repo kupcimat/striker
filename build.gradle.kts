@@ -105,6 +105,11 @@ dependencies {
 tasks {
     register<PrintBuildVersionTask>("printBuildVersion")
     register<UpgradeDependenciesTask>("upgradeDependencies") {
+        if (project.hasProperty("commitChanges")) commitChanges = true
+        if (project.hasProperty("createPullRequest")) createPullRequest = true
+        githubHttpsUri = project.findProperty("githubHttpsUri")?.toString() ?: ""
+        githubUsername = project.findProperty("githubUsername")?.toString() ?: ""
+        githubPassword = project.findProperty("githubPassword")?.toString() ?: ""
         buildFiles = listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
     }
 
