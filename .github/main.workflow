@@ -5,7 +5,7 @@ workflow "Deploy on Heroku" {
 
 workflow "Upgrade dependencies" {
   on = "schedule(0 0 */3 * *)"
-  resolves = ["create-pr-dependencies"]
+  resolves = ["upgrade-dependencies"]
 }
 
 # Push to master
@@ -59,19 +59,6 @@ action "verify-production" {
 
 action "upgrade-dependencies" {
   uses = "MrRamych/gradle-actions/openjdk-12@2.1"
-  args = ["upgradeDependencies"]
-}
-
-# Skip commit if there are no changes
-action "commit-dependencies" {
-  needs = "upgrade-dependencies"
-  uses = "srt32/git-actions@v0.0.3"
-  args = [".github/upgrade-dependencies-commit.sh"]
-}
-
-action "create-pr-dependencies" {
-  needs = "commit-dependencies"
-  uses = "elgohr/Github-Hub-Action@1.0"
-  args = ["pull-request", "--no-edit", "--push", "--labels dependencies"]
-  secrets = ["GITHUB_TOKEN"]
+  args = ["upgradeDependencies", "-PcreatePullRequest", "-PgithubUsername=$GIT_HUB_USERNAME", "-PgithubToken=$GITHUB_TOKEN"]
+  secrets = ["GIT_HUB_USERNAME", "GITHUB_TOKEN"]
 }

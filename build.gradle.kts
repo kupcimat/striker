@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.saigon.striker.gradle.PrintBuildVersionTask
 import org.saigon.striker.gradle.UpgradeDependenciesTask
-import org.saigon.striker.gradle.getLatestGitCommit
+import org.saigon.striker.gradle.getBuildVersion
 
 group = "org.saigon"
 version = "0.0.1-SNAPSHOT"
@@ -28,7 +28,7 @@ java {
 springBoot {
     buildInfo {
         properties {
-            val commit = getLatestGitCommit(projectDir)
+            val commit = getBuildVersion(projectDir)
             time = commit.time
             version = commit.hash
         }
@@ -105,6 +105,9 @@ dependencies {
 tasks {
     register<PrintBuildVersionTask>("printBuildVersion")
     register<UpgradeDependenciesTask>("upgradeDependencies") {
+        createPullRequest = project.hasProperty("createPullRequest")
+        githubUsername = project.findProperty("githubUsername")?.toString() ?: ""
+        githubToken = project.findProperty("githubToken")?.toString() ?: ""
         buildFiles = listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
     }
 
