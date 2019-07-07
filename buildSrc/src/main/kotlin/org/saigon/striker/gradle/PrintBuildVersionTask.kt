@@ -13,7 +13,7 @@ open class PrintBuildVersionTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        val commit = getLatestGitCommit(project.rootDir)
+        val commit = getBuildVersion(project.rootDir)
         println("Build version: ${commit.hash} (${commit.time ?: Instant.now()})")
     }
 }
