@@ -4,7 +4,7 @@ workflow "Deploy on Heroku" {
 }
 
 workflow "Upgrade dependencies" {
-  on = "schedule(0 0 */3 * *)"
+  on = "pull_request"
   resolves = ["upgrade-dependencies"]
 }
 
