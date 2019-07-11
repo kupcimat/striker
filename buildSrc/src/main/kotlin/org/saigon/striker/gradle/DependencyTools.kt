@@ -1,15 +1,9 @@
-@file:UseExperimental(UnstableDefault::class)
-
 package org.saigon.striker.gradle
 
-import io.ktor.client.HttpClient
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
-import io.ktor.http.URLBuilder
+import io.ktor.client.request.parameter
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.StringDescriptor
-import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.text.RegexOption.IGNORE_CASE
 
@@ -72,7 +66,9 @@ suspend fun upgradeDependencyVersion(line: String, matchResult: MatchResult): St
 
 suspend fun findLatestPluginVersion(pluginId: String): String? {
     val result = withHttpClient {
-        it.get<String>(createGradleSearchUri(pluginId))
+        get<String>("https://plugins.gradle.org/search") {
+            parameter("term", pluginId)
+        }
     }
 
     val latestVersionRegex = Regex("<span class='latest-version'>(.+)</span>")
@@ -81,19 +77,15 @@ suspend fun findLatestPluginVersion(pluginId: String): String? {
 
 suspend fun findLatestDependencyVersion(group: String, name: String): String? {
     val result = withHttpClient {
-        it.get<MavenSearchResult>(createMavenSearchUri(group, name))
+        get<MavenSearchResult>("https://api.bintray.com/search/packages/maven") {
+            parameter("g", group)
+            parameter("a", name)
+        }
     }
 
     return findPreferredArtifact(result)?.versions
         ?.filter(::isStableVersion)
         ?.firstOrNull(::isCompatibleVersion)
-}
-
-suspend fun <T> withHttpClient(block: suspend (HttpClient) -> T): T {
-    val client = HttpClient {
-        install(JsonFeature) { serializer = KotlinxSerializer(Json.nonstrict) }
-    }
-    return client.use { block(it) }
 }
 
 fun findPreferredArtifact(result: MavenSearchResult): MavenArtifact? {
@@ -111,17 +103,4 @@ fun isStableVersion(version: String): Boolean {
 fun isCompatibleVersion(version: String): Boolean {
     val versionPatterns = listOf("kotlin12", "groovy-2\\.4")
     return versionPatterns.none { it.toRegex(IGNORE_CASE).containsMatchIn(version) }
-}
-
-fun createGradleSearchUri(pluginId: String): String {
-    return URLBuilder("https://plugins.gradle.org/search").apply {
-        parameters.append("term", pluginId)
-    }.buildString()
-}
-
-fun createMavenSearchUri(group: String, name: String): String {
-    return URLBuilder("https://api.bintray.com/search/packages/maven").apply {
-        parameters.append("g", group)
-        parameters.append("a", name)
-    }.buildString()
 }
