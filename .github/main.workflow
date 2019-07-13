@@ -38,8 +38,17 @@ action "release-production" {
   }
 }
 
-action "health-check-production" {
+action "version-check-production" {
   needs = "release-production"
+  uses = "actions/bin/curl@master"
+  args = ["https://${HEROKU_APP}.herokuapp.com/actuator/info"]
+  env = {
+    HEROKU_APP = "striker-vn"
+  }
+}
+
+action "health-check-production" {
+  needs = "version-check-production"
   uses = "actions/bin/curl@master"
   args = ["https://${HEROKU_APP}.herokuapp.com/actuator/health", "|", "grep UP"]
   env = {
