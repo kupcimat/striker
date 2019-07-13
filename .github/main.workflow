@@ -50,7 +50,7 @@ action "health-check-production" {
 action "version-check-production" {
   needs = "health-check-production"
   uses = "actions/bin/curl@master"
-  args = ["https://${HEROKU_APP}.herokuapp.com/actuator/info"]
+  args = ["https://${HEROKU_APP}.herokuapp.com/actuator/info", "|", "grep $GITHUB_SHA"]
   env = {
     HEROKU_APP = "striker-vn"
   }
