@@ -11,10 +11,10 @@ version = "0.0.1-SNAPSHOT"
 plugins {
     java
     groovy
-    kotlin("jvm") version "1.3.40"
-    kotlin("kapt") version "1.3.40"
-    kotlin("plugin.spring") version "1.3.40"
-    id("kotlinx-serialization") version "1.3.40"
+    kotlin("jvm") version "1.3.41"
+    kotlin("kapt") version "1.3.41"
+    kotlin("plugin.spring") version "1.3.41"
+    id("kotlinx-serialization") version "1.3.41"
     id("org.springframework.boot") version "2.2.0.M4"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
     id("com.google.cloud.tools.jib") version "1.3.0"
