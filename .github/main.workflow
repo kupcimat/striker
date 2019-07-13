@@ -38,17 +38,8 @@ action "release-production" {
   }
 }
 
-action "version-check-production" {
-  needs = "release-production"
-  uses = "actions/bin/curl@master"
-  args = ["https://${HEROKU_APP}.herokuapp.com/actuator/info"]
-  env = {
-    HEROKU_APP = "striker-vn"
-  }
-}
-
 action "health-check-production" {
-  needs = "version-check-production"
+  needs = "release-production"
   uses = "actions/bin/curl@master"
   args = ["https://${HEROKU_APP}.herokuapp.com/actuator/health", "|", "grep UP"]
   env = {
@@ -56,8 +47,17 @@ action "health-check-production" {
   }
 }
 
-action "verify-production" {
+action "version-check-production" {
   needs = "health-check-production"
+  uses = "actions/bin/curl@master"
+  args = ["https://${HEROKU_APP}.herokuapp.com/actuator/info"]
+  env = {
+    HEROKU_APP = "striker-vn"
+  }
+}
+
+action "verify-production" {
+  needs = "version-check-production"
   uses = "MrRamych/gradle-actions/openjdk-12@2.1"
   args = ["test", "-DserverUrl=https://${HEROKU_APP}.herokuapp.com", "-Dusername=$TEST_USERNAME", "-Dpassword=$TEST_PASSWORD"]
   secrets = ["TEST_USERNAME", "TEST_PASSWORD"]
