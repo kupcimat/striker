@@ -1,3 +1,5 @@
+import datetime
+import os
 from typing import Any, Iterable
 
 import requests
@@ -5,14 +7,6 @@ from invoke import task
 
 
 # TODO add tests
-@task
-def start_mongo(ctx):
-    """
-    Start local mongo db in docker
-    """
-    ctx.run(docker_compose("up mongo"))
-
-
 @task
 def build_image(ctx):
     """
@@ -67,8 +61,54 @@ def run_health_check(ctx, heroku_app="striker-vn"):
     print(f"Version = {safe_get(info, 'build', 'version')} ({safe_get(info, 'build', 'time')})")
 
 
+@task
+def mongo_local(ctx):
+    """
+    Start local mongo db in docker
+    """
+    ctx.run(docker_compose("up mongo"))
+
+
+@task(help={"host": "MongoDB host",
+            "username": "MongoDB username",
+            "password": "MongoDB password",
+            "database": "MongoDB database to backup (optional)",
+            "directory": "MongoDB backup directory (optional)"})
+def mongo_backup(ctx, host, username, password, database="prod", directory="/tmp/mongo-backup"):
+    backup_dir = os.path.join(directory, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+
+    print(f"Creating backup for database {database} in {backup_dir}")
+    ctx.run(docker("run", f"--volume {backup_dir}:{backup_dir}", "mongo", "mongodump",
+                   "--ssl",
+                   "--authenticationDatabase admin",
+                   f"--host {host}",
+                   f"--username {username}",
+                   f"--password {password}",
+                   f"--db {database}",
+                   f"--out {backup_dir}"))
+
+
+@task(help={"host": "MongoDB host",
+            "username": "MongoDB username",
+            "password": "MongoDB password",
+            "backup-dir": "MongoDB backup directory"})
+def mongo_restore(ctx, host, username, password, backup_dir):
+    print(f"Restoring backup in {backup_dir}")
+    ctx.run(docker("run", f"--volume {backup_dir}:{backup_dir}", "mongo", "mongorestore",
+                   "--ssl",
+                   "--authenticationDatabase admin",
+                   f"--host {host}",
+                   f"--username {username}",
+                   f"--password {password}",
+                   f"--dir {backup_dir}"))
+
+
 def gradle(*arguments: str) -> str:
     return f"./gradlew {join(arguments)}"
+
+
+def docker(*arguments: str) -> str:
+    return f"docker {join(arguments)}"
 
 
 def docker_compose(*arguments: str) -> str:
