@@ -66,7 +66,7 @@ dependencyManagement {
         dependency("io.ktor:ktor-server-netty:1.2.2")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.11.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.7.0")
+        dependency("net.javacrumbs.json-unit:json-unit:2.8.0")
     }
 }
 
