@@ -15,8 +15,8 @@ dependencyManagement {
         dependency("org.eclipse.jgit:org.eclipse.jgit:5.4.0.201906121030-r")
         dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1")
-        dependency("io.ktor:ktor-client-cio:1.2.2")
-        dependency("io.ktor:ktor-client-serialization-jvm:1.2.2")
+        dependency("io.ktor:ktor-client-cio:1.2.3")
+        dependency("io.ktor:ktor-client-serialization-jvm:1.2.3")
     }
 }
 

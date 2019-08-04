@@ -63,7 +63,7 @@ dependencyManagement {
         // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
         dependency("org.spockframework:spock-core:1.3-groovy-2.5")
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
-        dependency("io.ktor:ktor-server-netty:1.2.2")
+        dependency("io.ktor:ktor-server-netty:1.2.3")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.11.0")
         dependency("net.javacrumbs.json-unit:json-unit:2.8.0")
