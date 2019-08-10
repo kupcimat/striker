@@ -75,6 +75,9 @@ def mongo_local(ctx):
             "database": "MongoDB database to backup (optional)",
             "directory": "MongoDB backup directory (optional)"})
 def mongo_backup(ctx, host, username, password, database="prod", directory="/tmp/mongo-backup"):
+    """
+    Backup MongoDB database locally.
+    """
     backup_dir = os.path.join(directory, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
     print(f"Creating backup for database {database} in {backup_dir}")
@@ -93,6 +96,9 @@ def mongo_backup(ctx, host, username, password, database="prod", directory="/tmp
             "password": "MongoDB password",
             "backup-dir": "MongoDB backup directory"})
 def mongo_restore(ctx, host, username, password, backup_dir):
+    """
+    Restore MongoDB database from a local backup.
+    """
     print(f"Restoring backup in {backup_dir}")
     ctx.run(docker("run", f"--volume {backup_dir}:{backup_dir}", "mongo", "mongorestore",
                    "--ssl",
