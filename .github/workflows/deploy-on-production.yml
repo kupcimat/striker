@@ -10,11 +10,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@master
-      # TODO can we get rid of this step or replace it with if statement?
-      - name: not-deleted-filter
-        uses: actions/bin/filter@master
-        with:
-          args: not deleted
       - name: Build
         uses: MrRamych/gradle-actions/openjdk-12@2.1
         with:
