@@ -17,7 +17,7 @@ plugins {
     id("kotlinx-serialization") version "1.3.41"
     id("org.springframework.boot") version "2.2.0.M5"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.4.0"
+    id("com.google.cloud.tools.jib") version "1.5.0"
 }
 
 java {
@@ -65,7 +65,7 @@ dependencyManagement {
         dependency("org.spockframework:spock-core:1.3-groovy-2.5")
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
         dependency("io.mockk:mockk:1.9.3")
-        dependency("com.charleskorn.kaml:kaml:0.11.0")
+        dependency("com.charleskorn.kaml:kaml:0.12.0")
         dependency("net.javacrumbs.json-unit:json-unit:2.8.0")
     }
 }
