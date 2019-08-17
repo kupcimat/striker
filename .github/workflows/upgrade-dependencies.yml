@@ -1,0 +1,18 @@
+name: Upgrade Dependencies
+on:
+  schedule:
+    - cron: "0 0 */3 * *"
+jobs:
+  upgrade-dependencies:
+    name: Upgrade Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: upgrade-dependencies
+        uses: MrRamych/gradle-actions/openjdk-12@2.1
+        with:
+          args: upgradeDependencies -PcreatePullRequest -PgithubUsername=${GIT_HUB_USERNAME} -PgithubToken=${GITHUB_TOKEN}
+        env:
+          GIT_HUB_USERNAME: ${{ secrets.GIT_HUB_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
