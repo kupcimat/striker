@@ -11,9 +11,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@master
       - name: Build
-        uses: MrRamych/gradle-actions/openjdk-12@2.1
+        uses: docker://openjdk:11
         with:
-          args: jib -Djib.to.auth.username=_ -Djib.to.auth.password=${HEROKU_API_KEY}
+          args: ./gradlew jib -Djib.to.auth.username=_ -Djib.to.auth.password=${HEROKU_API_KEY}
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Release
@@ -37,9 +37,9 @@ jobs:
           BUILD_COMMIT: ${{ github.sha }}
           HEROKU_APP: striker-vn
       - name: Verify
-        uses: MrRamych/gradle-actions/openjdk-12@2.1
+        uses: docker://openjdk:11
         with:
-          args: test -DserverUrl=https://${HEROKU_APP}.herokuapp.com -Dusername=${TEST_USERNAME} -Dpassword=${TEST_PASSWORD}
+          args: ./gradlew test -DserverUrl=https://${HEROKU_APP}.herokuapp.com -Dusername=${TEST_USERNAME} -Dpassword=${TEST_PASSWORD}
         env:
           TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
