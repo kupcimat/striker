@@ -9,10 +9,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@master
-      - name: upgrade-dependencies
-        uses: docker://openjdk:11
+      - name: Setup Java
+        uses: actions/setup-java@master
         with:
-          args: ./gradlew upgradeDependencies -PcreatePullRequest -PgithubUsername=${GIT_HUB_USERNAME} -PgithubToken=${GITHUB_TOKEN}
+          java-version: 11
+      - name: Upgrade Dependencies
+        run: ./gradlew upgradeDependencies -PcreatePullRequest -PgithubUsername=${GIT_HUB_USERNAME} -PgithubToken=${GITHUB_TOKEN}
         env:
           GIT_HUB_USERNAME: ${{ secrets.GIT_HUB_USERNAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
