@@ -11,13 +11,13 @@ version = "0.0.1-SNAPSHOT"
 plugins {
     java
     groovy
-    kotlin("jvm") version "1.3.41"
-    kotlin("kapt") version "1.3.41"
-    kotlin("plugin.spring") version "1.3.41"
-    id("kotlinx-serialization") version "1.3.41"
+    kotlin("jvm") version "1.3.50"
+    kotlin("kapt") version "1.3.50"
+    kotlin("plugin.spring") version "1.3.50"
+    id("kotlinx-serialization") version "1.3.50"
     id("org.springframework.boot") version "2.2.0.M5"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.5.0"
+    id("com.google.cloud.tools.jib") version "1.5.1"
 }
 
 java {
@@ -55,12 +55,12 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.0-RC2")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.0")
         mavenBom("io.ktor:ktor-bom:1.2.3")
     }
     dependencies {
         dependency("org.codehaus.groovy:groovy-all:2.5.8")
-        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
         // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
         dependency("org.spockframework:spock-core:1.3-groovy-2.5")
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
