@@ -17,7 +17,7 @@ plugins {
     id("kotlinx-serialization") version "1.3.50"
     id("org.springframework.boot") version "2.2.0.M5"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.5.0"
+    id("com.google.cloud.tools.jib") version "1.5.1"
 }
 
 java {
