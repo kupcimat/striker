@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.41"
-    id("kotlinx-serialization") version "1.3.41"
+    kotlin("jvm") version "1.3.50"
+    id("kotlinx-serialization") version "1.3.50"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
 }
 
@@ -12,12 +12,12 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.0-RC2")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.0")
         mavenBom("io.ktor:ktor-bom:1.2.3")
     }
     dependencies {
         dependency("org.eclipse.jgit:org.eclipse.jgit:5.4.0.201906121030-r")
-        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
     }
 }
 
