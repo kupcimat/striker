@@ -30,6 +30,7 @@ data class MavenSearchResult(
 suspend fun upgradeVersions(buildFile: File) {
     val pluginRegex = Regex("""(id|kotlin)\("(.+)"\) version "(.+)"""")
     val dependencyRegex = Regex("""dependency\("(.+):(.+):(.+)"\)""")
+    val bomDependencyRegex = Regex("""mavenBom\("(.+):(.+):(.+)"\)""")
 
     val fileContent = buildFile.readLines()
     buildFile.writeText("")
@@ -38,6 +39,7 @@ suspend fun upgradeVersions(buildFile: File) {
         val newLine = when {
             pluginRegex.containsMatchIn(line) -> upgradePluginVersion(line, pluginRegex.find(line)!!)
             dependencyRegex.containsMatchIn(line) -> upgradeDependencyVersion(line, dependencyRegex.find(line)!!)
+            bomDependencyRegex.containsMatchIn(line) -> upgradeDependencyVersion(line, bomDependencyRegex.find(line)!!)
             else -> line
         }
         buildFile.appendText("$newLine\n")
@@ -49,10 +51,9 @@ suspend fun upgradePluginVersion(line: String, matchResult: MatchResult): String
     val resolvedId = if (type == "kotlin") "org.jetbrains.kotlin.$id" else id
 
     val latestVersion = findLatestPluginVersion(resolvedId)
-    val updateVersion = if ((latestVersion != null) && (latestVersion > version)) latestVersion else version
     println("Plugin $resolvedId current=$version latest=${latestVersion ?: "NOT_FOUND"}")
 
-    return line.replace(version, updateVersion)
+    return line.replace(version, updateVersion(version, latestVersion))
 }
 
 suspend fun upgradeDependencyVersion(line: String, matchResult: MatchResult): String {
@@ -61,7 +62,7 @@ suspend fun upgradeDependencyVersion(line: String, matchResult: MatchResult): St
     val latestVersion = findLatestDependencyVersion(group, name)
     println("Dependency $group:$name current=$version latest=${latestVersion ?: "NOT_FOUND"}")
 
-    return line.replace(version, latestVersion ?: version)
+    return line.replace(version, updateVersion(version, latestVersion))
 }
 
 suspend fun findLatestPluginVersion(pluginId: String): String? {
@@ -103,4 +104,11 @@ fun isStableVersion(version: String): Boolean {
 fun isCompatibleVersion(version: String): Boolean {
     val versionPatterns = listOf("kotlin12", "groovy-2\\.4")
     return versionPatterns.none { it.toRegex(IGNORE_CASE).containsMatchIn(version) }
+}
+
+fun updateVersion(version: String, latestVersion: String?): String {
+    if (!isStableVersion(version)) {
+        return version
+    }
+    return latestVersion ?: version
 }
