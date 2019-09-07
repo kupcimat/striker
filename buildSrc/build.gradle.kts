@@ -12,11 +12,11 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.0")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.1")
         mavenBom("io.ktor:ktor-bom:1.2.4")
     }
     dependencies {
-        dependency("org.eclipse.jgit:org.eclipse.jgit:5.4.2.201908231537-r")
+        dependency("org.eclipse.jgit:org.eclipse.jgit:5.4.3.201909031940-r")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
     }
 }
