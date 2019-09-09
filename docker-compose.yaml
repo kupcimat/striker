@@ -1,6 +1,10 @@
 version: "3.7"
 services:
-  web:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+  backend:
     image: registry.heroku.com/striker-vn/web
     depends_on:
       - mongo
@@ -9,7 +13,12 @@ services:
       MONGODB_URI: "mongodb://mongo/test"
     ports:
       - "8080:8080"
-  mongo:
-    image: mongo
+  frontend:
+    image: registry.heroku.com/striker-vn-ui/web
+    depends_on:
+      - backend
+    environment:
+      PORT: "8081"
+      BACKEND_URI: "http://localhost:8080"
     ports:
-      - "27017:27017"
+      - "8081:8081"
