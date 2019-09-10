@@ -24,7 +24,7 @@ interface BasicScenario {
             "children" to "0"
         ).entries.joinToString(separator = "&")
 
-        webTestClient.get().uri("/agoda?$queryParamsString")
+        webTestClient.get().uri("/api/agoda?$queryParamsString")
             .exchange()
             .expectStatus().isOk
             .expectBody<String>()

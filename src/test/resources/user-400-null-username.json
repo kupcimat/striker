@@ -2,7 +2,7 @@
   "status": 400,
   "error": "Bad Request",
   "message": "Error in object 'user' on field 'username': must not be null",
-  "path": "/admin/users",
+  "path": "/api/admin/users",
   "requestId": "${json-unit.matches:request-id}",
   "timestamp": "${json-unit.matches:iso-date-time}"
 }

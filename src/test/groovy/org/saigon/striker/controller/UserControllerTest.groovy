@@ -36,8 +36,8 @@ class UserControllerTest extends Specification {
         userService.createUser(_ as UserEntity, _ as Continuation) >> { mockedUserSupplier() }
 
         expect:
-        api(webTestClient).post().uri("/admin/users")
-                .syncBody(inputUser)
+        api(webTestClient).post().uri("/api/admin/users")
+                .body(inputUser)
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson))
@@ -67,7 +67,7 @@ class UserControllerTest extends Specification {
         userService.getUser(USER_ID, _ as Continuation) >> mockedUser
 
         expect:
-        api(webTestClient).get().uri("/admin/users/$USER_ID")
+        api(webTestClient).get().uri("/api/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson))
@@ -80,7 +80,7 @@ class UserControllerTest extends Specification {
 
     def "DELETE user"() {
         when:
-        api(webTestClient).delete().uri("/admin/users/$USER_ID")
+        api(webTestClient).delete().uri("/api/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isNoContent()
                 .expectBody().isEmpty()

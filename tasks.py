@@ -15,7 +15,16 @@ def build_image(ctx):
     ctx.run(gradle("jibDockerBuild"))
 
 
-@task(build_image)
+@task
+def build_image_ui(ctx):
+    """
+    Build UI docker image locally
+    """
+    with ctx.cd(get_ui_directory()):
+        ctx.run(docker("build", "--tag registry.heroku.com/striker-vn-ui/web", "."))
+
+
+@task(build_image, build_image_ui)
 def deploy_local(ctx):
     """
     Build docker image and run it locally
@@ -143,3 +152,9 @@ def safe_get(json: Any, *path: str) -> Any:
             return safe_get(json[path[0]], *path[1:])
         else:
             return safe_get("unknown")
+
+
+def get_ui_directory(directory: str = "../striker-ui") -> str:
+    if not os.path.isdir(directory):
+        raise RuntimeError(f"UI directory {directory} does not exist")
+    return directory

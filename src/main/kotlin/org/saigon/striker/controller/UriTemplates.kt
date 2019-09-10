@@ -5,10 +5,12 @@ import java.net.URI
 
 object UriTemplates {
 
-    const val AGODA = "/agoda"
-    const val AGODA_SEARCH = "/agoda/search"
+    private const val API_PREFIX = "/api"
 
-    const val USERS = "/admin/users"
+    const val AGODA = "$API_PREFIX/agoda"
+    const val AGODA_SEARCH = "$AGODA/search"
+
+    const val USERS = "$API_PREFIX/admin/users"
     const val USER = "$USERS/{userId}"
 
     fun expandUser(userId: String?): URI = UriTemplate(USER).expand(userId ?: throw IllegalArgumentException())
