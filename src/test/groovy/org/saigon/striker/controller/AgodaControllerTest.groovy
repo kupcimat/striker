@@ -33,7 +33,7 @@ class AgodaControllerTest extends Specification {
         agodaService.getHotel(agodaParams, _ as Continuation) >> new Hotel(42, "my-hotel", [])
 
         expect:
-        api(webTestClient).get().uri("/agoda${createQueryString(queryParams)}")
+        api(webTestClient).get().uri("/api/agoda${createQueryString(queryParams)}")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson, ["error-message": Matchers.is(errorMessage)]))
@@ -82,7 +82,7 @@ class AgodaControllerTest extends Specification {
         agodaService.search(queryParams.query, _ as Continuation) >> new SearchResult([])
 
         expect:
-        api(webTestClient).get().uri("/agoda/search${createQueryString(queryParams)}")
+        api(webTestClient).get().uri("/api/agoda/search${createQueryString(queryParams)}")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson, ["error-message": Matchers.is(errorMessage)]))
