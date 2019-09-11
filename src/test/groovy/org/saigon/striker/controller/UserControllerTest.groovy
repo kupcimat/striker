@@ -37,7 +37,7 @@ class UserControllerTest extends Specification {
 
         expect:
         api(webTestClient).post().uri("/api/admin/users")
-                .body(inputUser)
+                .bodyValue(inputUser)
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson))
