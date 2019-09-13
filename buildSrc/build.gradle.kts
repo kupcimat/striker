@@ -16,7 +16,7 @@ dependencyManagement {
         mavenBom("io.ktor:ktor-bom:1.2.4")
     }
     dependencies {
-        dependency("org.eclipse.jgit:org.eclipse.jgit:5.4.3.201909031940-r")
+        dependency("org.eclipse.jgit:org.eclipse.jgit:5.5.0.201909110433-r")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
     }
 }
