@@ -17,7 +17,7 @@ plugins {
     kotlin("plugin.serialization") version "1.3.50"
     id("org.springframework.boot") version "2.2.0.M6"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.5.1"
+    id("com.google.cloud.tools.jib") version "1.6.0"
 }
 
 java {
@@ -60,7 +60,7 @@ dependencyManagement {
     }
     dependencies {
         dependency("org.codehaus.groovy:groovy-all:2.5.8")
-        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.12.0")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0")
         // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
         dependency("org.spockframework:spock-core:1.3-groovy-2.5")
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
