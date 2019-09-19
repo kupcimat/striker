@@ -49,6 +49,7 @@ jib {
 }
 
 repositories {
+    mavenCentral()
     jcenter()
     maven("http://repo.spring.io/milestone")
 }
