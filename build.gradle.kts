@@ -17,7 +17,7 @@ plugins {
     kotlin("plugin.serialization") version "1.3.50"
     id("org.springframework.boot") version "2.2.0.M6"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    id("com.google.cloud.tools.jib") version "1.6.0"
+    id("com.google.cloud.tools.jib") version "1.6.1"
 }
 
 java {
@@ -66,7 +66,7 @@ dependencyManagement {
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.13.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.8.0")
+        dependency("net.javacrumbs.json-unit:json-unit:2.8.1")
     }
 }
 
