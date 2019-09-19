@@ -18,8 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient
 @ExtendWith(MockKExtension::class)
 class AgodaServiceTest {
 
-    val mockServer = startMockServer(port = 8080)
-    val agodaService = AgodaService(WebClient.builder(), "http://localhost:8080")
+    val mockServer = startMockServer(port = 38080)
+    val agodaService = AgodaService(WebClient.builder(), "http://localhost:38080")
 
     @AfterAll
     fun tearDown() {
