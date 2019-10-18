@@ -6,10 +6,12 @@ import org.saigon.striker.model.UserEntity
 import org.saigon.striker.service.UserService
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
+@ConstructorBinding
 @ConfigurationProperties("fixtures")
 data class FixturesProperties(
     val username: String,
