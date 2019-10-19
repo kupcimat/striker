@@ -26,15 +26,11 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_APP: striker-vn
       - name: Health Check
-        uses: actions/bin/curl@master
-        with:
-          args: https://${HEROKU_APP}.herokuapp.com/actuator/health | grep UP
+        run: https://${HEROKU_APP}.herokuapp.com/actuator/health | grep UP
         env:
           HEROKU_APP: striker-vn
       - name: Version Check
-        uses: actions/bin/curl@master
-        with:
-          args: https://${HEROKU_APP}.herokuapp.com/actuator/info | grep ${BUILD_COMMIT}
+        run: https://${HEROKU_APP}.herokuapp.com/actuator/info | grep ${BUILD_COMMIT}
         env:
           BUILD_COMMIT: ${{ github.sha }}
           HEROKU_APP: striker-vn
