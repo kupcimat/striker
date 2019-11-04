@@ -67,7 +67,7 @@ dependencyManagement {
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.14.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.10.0")
+        dependency("net.javacrumbs.json-unit:json-unit:2.11.1")
     }
 }
 
