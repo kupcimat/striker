@@ -1,6 +1,7 @@
 package org.saigon.striker
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 
 object Profiles {
@@ -9,6 +10,7 @@ object Profiles {
 }
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 class StrikerApplication
 
 fun main(args: Array<String>) {
