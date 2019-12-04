@@ -97,7 +97,7 @@ fun findPreferredArtifact(result: MavenSearchResult): MavenArtifact? {
 }
 
 fun isStableVersion(version: String): Boolean {
-    val versionPatterns = listOf("alpha", "beta", "m[0-9]*", "rc[0-9]*", "eap")
+    val versionPatterns = listOf("alpha", "beta", "m[0-9]*", "rc[0-9]*", "eap", "js-ir-[0-9]*")
     return versionPatterns.none { it.toRegex(IGNORE_CASE).containsMatchIn(version) }
 }
 
