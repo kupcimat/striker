@@ -5,22 +5,13 @@ import org.saigon.striker.Profiles
 import org.saigon.striker.model.UserEntity
 import org.saigon.striker.service.UserService
 import org.springframework.boot.ApplicationRunner
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-@ConstructorBinding
-@ConfigurationProperties("fixtures")
-data class FixturesProperties(
-    val username: String,
-    val password: String
-)
-
 @Configuration
 @Profile(Profiles.NOT_HEROKU)
-class FixturesConfiguration(val properties: FixturesProperties) {
+class FixturesConfig(val properties: FixturesProperties) {
 
     @Bean
     fun databaseInitializer(userService: UserService) = ApplicationRunner {
