@@ -13,7 +13,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.2")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.2-1.3.60")
         mavenBom("io.ktor:ktor-bom:1.2.6")
     }
     dependencies {
