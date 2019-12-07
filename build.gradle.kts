@@ -15,7 +15,7 @@ plugins {
     kotlin("kapt") version "1.3.61"
     kotlin("plugin.spring") version "1.3.61"
     kotlin("plugin.serialization") version "1.3.61"
-    id("org.springframework.boot") version "2.2.1.RELEASE"
+    id("org.springframework.boot") version "2.2.2.RELEASE"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
     id("com.google.cloud.tools.jib") version "1.8.0"
 }
@@ -56,7 +56,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.2")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.2-1.3.60")
         mavenBom("io.ktor:ktor-bom:1.2.6")
     }
     dependencies {
