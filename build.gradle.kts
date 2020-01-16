@@ -57,10 +57,10 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.3")
-        mavenBom("io.ktor:ktor-bom:1.2.6")
+        mavenBom("io.ktor:ktor-bom:1.3.0")
     }
     dependencies {
-        dependency("org.codehaus.groovy:groovy-all:2.5.8")
+        dependency("org.codehaus.groovy:groovy-all:2.5.9")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
         // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
         dependency("org.spockframework:spock-core:1.3-groovy-2.5")
