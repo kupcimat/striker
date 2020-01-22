@@ -17,7 +17,6 @@ import io.ktor.util.pipeline.ContextDsl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 val logger: Logger = LoggerFactory.getLogger("MockServer")
 
@@ -34,7 +33,7 @@ fun startMockServer(host: String = "0.0.0.0", port: Int = 8080): ApplicationEngi
 
 fun stopMockServer(server: ApplicationEngine) {
     logger.info("Stopping server")
-    server.stop(gracePeriod = 1L, timeout = 1L, timeUnit = TimeUnit.SECONDS)
+    server.stop(gracePeriodMillis = 1000L, timeoutMillis = 1000L)
 }
 
 fun ApplicationEngine.configure(builder: PathsBuilder.() -> Unit) {
