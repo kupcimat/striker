@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.3.61"
     kotlin("plugin.serialization") version "1.3.61"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
 }
 
 repositories {
@@ -14,7 +14,7 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.3")
-        mavenBom("io.ktor:ktor-bom:1.2.6")
+        mavenBom("io.ktor:ktor-bom:1.3.0")
     }
     dependencies {
         dependency("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")

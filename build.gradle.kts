@@ -15,8 +15,8 @@ plugins {
     kotlin("kapt") version "1.3.61"
     kotlin("plugin.spring") version "1.3.61"
     kotlin("plugin.serialization") version "1.3.61"
-    id("org.springframework.boot") version "2.2.2.RELEASE"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("org.springframework.boot") version "2.2.4.RELEASE"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.google.cloud.tools.jib") version "1.8.0"
 }
 
@@ -57,17 +57,17 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.3")
-        mavenBom("io.ktor:ktor-bom:1.2.6")
+        mavenBom("io.ktor:ktor-bom:1.3.0")
     }
     dependencies {
-        dependency("org.codehaus.groovy:groovy-all:2.5.8")
+        dependency("org.codehaus.groovy:groovy-all:2.5.9")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
         // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
         dependency("org.spockframework:spock-core:1.3-groovy-2.5")
         dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.15.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.11.1")
+        dependency("net.javacrumbs.json-unit:json-unit:2.12.0")
     }
 }
 
