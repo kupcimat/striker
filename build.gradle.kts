@@ -51,7 +51,7 @@ jib {
 repositories {
     mavenCentral()
     jcenter()
-    maven("http://repo.spring.io/milestone")
+    maven("https://repo.spring.io/milestone")
 }
 
 dependencyManagement {
@@ -105,12 +105,13 @@ dependencies {
 
 tasks {
     register<PrintBuildVersionTask>("printBuildVersion")
-    register<UpgradeDependenciesTask>("upgradeDependencies") {
-        createPullRequest = project.hasProperty("createPullRequest")
-        githubUsername = project.findProperty("githubUsername")?.toString() ?: ""
-        githubToken = project.findProperty("githubToken")?.toString() ?: ""
-        buildFiles = listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
-    }
+    register<UpgradeDependenciesTask>(
+        "upgradeDependencies",
+        project.hasProperty("createPullRequest"),
+        project.findProperty("githubUsername")?.toString() ?: "",
+        project.findProperty("githubToken")?.toString() ?: "",
+        listOf("./build.gradle.kts", "./buildSrc/build.gradle.kts")
+    )
 
     withType<KotlinCompile> {
         kotlinOptions {
@@ -121,7 +122,7 @@ tasks {
 
     compileTestGroovy {
         // Groovy tests depend on kotlin test utils
-        classpath += files(compileTestKotlin.get().destinationDir)
+        classpath += files(compileTestKotlin.get().destinationDirectory)
     }
 
     test {

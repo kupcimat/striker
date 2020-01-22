@@ -4,19 +4,19 @@ import kotlinx.coroutines.runBlocking
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import javax.inject.Inject
 
-@Suppress("MemberVisibilityCanBePrivate")
-open class UpgradeDependenciesTask : DefaultTask() {
+open class UpgradeDependenciesTask @Inject constructor(
+    private val createPullRequest: Boolean,
+    private val githubUsername: String,
+    private val githubToken: String,
+    private val buildFiles: List<String>
+) : DefaultTask() {
 
     init {
         group = "Util"
         description = "Upgrades dependencies in build files"
     }
-
-    var createPullRequest = false
-    var githubUsername = ""
-    var githubToken = ""
-    var buildFiles = listOf<String>()
 
     @TaskAction
     fun run() = runBlocking {
