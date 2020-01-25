@@ -5,6 +5,9 @@ import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 
+class ValidationException(message: String) :
+    ResponseStatusException(HttpStatus.BAD_REQUEST, message)
+
 class UsernameAlreadyExistsException(username: String) :
     ResponseStatusException(HttpStatus.BAD_REQUEST, "Username '$username' already exists")
 

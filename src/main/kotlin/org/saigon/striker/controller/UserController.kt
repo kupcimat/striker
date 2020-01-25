@@ -6,13 +6,12 @@ import org.saigon.striker.model.toUserWithoutPassword
 import org.saigon.striker.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
 
 @RestController
 class UserController(val userService: UserService) {
 
     @PostMapping(UriTemplates.USERS)
-    suspend fun createUser(@Valid @RequestBody user: User): ResponseEntity<User> {
+    suspend fun createUser(@RequestBody user: User): ResponseEntity<User> {
         val userEntity = userService.createUser(user.toEntity())
         return ResponseEntity.created(UriTemplates.expandUser(userEntity.id))
             .body(userEntity.toUserWithoutPassword())

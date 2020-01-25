@@ -11,32 +11,33 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @JsonTypeName("user")
 @JsonTypeInfo(use = NAME, include = WRAPPER_OBJECT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(NON_NULL)
 data class User(
-
-    @field: NotNull
-    @field: Size(min = 4, max = 32)
     val username: String?,
-
-    @field: NotNull
-    @field: Size(min = 8, max = 32)
     val password: String?
 )
 
 @Document(collection = "user")
 @TypeAlias("userEntity")
-data class UserEntity(@Indexed val username: String, val password: String, @Id val id: String? = null)
+data class UserEntity(
+    @Indexed
+    val username: String,
+    val password: String,
+    @Id
+    val id: String? = null
+)
 
 enum class UserRoles {
     USER
 }
 
-fun User.toEntity() = UserEntity(username!!, password!!)
+fun User.toEntity() = UserEntity(
+    validateSize(username, name = "username", range = 4..32),
+    validateSize(password, name = "password", range = 8..32)
+)
 
 fun UserEntity.toUserWithoutPassword() = User(username, password = null)
