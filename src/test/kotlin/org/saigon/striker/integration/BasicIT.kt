@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import java.time.LocalDate
 
 interface BasicScenario {
 
@@ -15,9 +16,10 @@ interface BasicScenario {
 
     @Test
     fun `call agoda api`() {
+        val checkInDate = LocalDate.now().plusDays(30).toString()
         val queryParamsString = mapOf(
             "hotelId" to "1",
-            "checkInDate" to "2019-09-09",
+            "checkInDate" to checkInDate,
             "lengthOfStay" to "4",
             "rooms" to "1",
             "adults" to "2",
