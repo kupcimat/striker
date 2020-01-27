@@ -57,14 +57,12 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.3")
+        mavenBom("org.spockframework:spock-bom:2.0-M1-groovy-2.5")
         mavenBom("io.ktor:ktor-bom:1.3.0")
     }
     dependencies {
         dependency("org.codehaus.groovy:groovy-all:2.5.9")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
-        // TODO exclude junit4 dependency when migrated to spock2 (see bd97d9d)
-        dependency("org.spockframework:spock-core:1.3-groovy-2.5")
-        dependency("org.spockframework:spock-spring:1.3-groovy-2.5")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.15.0")
         dependency("net.javacrumbs.json-unit:json-unit:2.12.0")
@@ -100,7 +98,14 @@ dependencies {
 
     testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
+}
+
+configurations {
+    testImplementation {
+        // TODO exclude junit 4 dependency when migrated to Spock 2.0
+        // exclude(group = "junit", module = "junit")
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
 }
 
 tasks {
