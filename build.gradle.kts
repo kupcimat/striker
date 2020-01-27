@@ -15,7 +15,7 @@ plugins {
     kotlin("kapt") version "1.3.61"
     kotlin("plugin.spring") version "1.3.61"
     kotlin("plugin.serialization") version "1.3.61"
-    id("org.springframework.boot") version "2.2.4.RELEASE"
+    id("org.springframework.boot") version "2.3.0.M1"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.google.cloud.tools.jib") version "1.8.0"
 }
@@ -92,8 +92,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("net.javacrumbs.json-unit:json-unit")
     testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime")
+    testImplementation("net.javacrumbs.json-unit:json-unit")
     testImplementation("com.charleskorn.kaml:kaml")
     testImplementation("io.ktor:ktor-server-netty")
     testImplementation("io.mockk:mockk")
