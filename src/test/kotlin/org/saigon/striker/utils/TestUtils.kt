@@ -14,7 +14,7 @@ object TestUtils
 
 val defaultMatchers: Map<String, Matcher<String>> = mapOf(
     "request-id" to matchesPattern("[a-z0-9]+"),
-    "iso-date-time" to matchesPattern("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z")
+    "iso-date-time" to matchesPattern("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3,6}Z")
 )
 
 fun api(client: WebTestClient): WebTestClient {
