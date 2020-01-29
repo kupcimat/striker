@@ -23,13 +23,6 @@ data class GitCredentials(
     val password: String
 )
 
-fun getBuildVersion(directory: File): GitCommit {
-    if (gitStatus(directory).isClean) {
-        return gitLog(directory, maxCount = 1).first()
-    }
-    return GitCommit(hash = "development")
-}
-
 fun gitStatus(directory: File): Status {
     return withGit(directory) {
         status()

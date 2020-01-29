@@ -1,12 +1,10 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.saigon.striker.gradle.PrintBuildVersionTask
 import org.saigon.striker.gradle.UpgradeDependenciesTask
-import org.saigon.striker.gradle.getBuildVersion
 
 group = "org.saigon"
-version = "0.0.1-SNAPSHOT"
+version = "release"
 
 plugins {
     java
@@ -17,6 +15,7 @@ plugins {
     kotlin("plugin.serialization") version "1.3.61"
     id("org.springframework.boot") version "2.3.0.M1"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
+    id("com.gorylenko.gradle-git-properties") version "2.2.0"
     id("com.google.cloud.tools.jib") version "1.8.0"
 }
 
@@ -28,11 +27,13 @@ java {
 springBoot {
     buildInfo {
         properties {
-            val commit = getBuildVersion(projectDir)
-            time = commit.time
-            version = commit.hash
+            time = null
         }
     }
+}
+
+gitProperties {
+    keys = listOf("git.branch", "git.commit.id", "git.commit.time")
 }
 
 jib {
@@ -109,7 +110,6 @@ configurations {
 }
 
 tasks {
-    register<PrintBuildVersionTask>("printBuildVersion")
     register<UpgradeDependenciesTask>(
         "upgradeDependencies",
         project.hasProperty("createPullRequest"),
