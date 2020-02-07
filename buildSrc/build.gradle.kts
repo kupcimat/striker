@@ -14,7 +14,7 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.3")
-        mavenBom("io.ktor:ktor-bom:1.3.0")
+        mavenBom("io.ktor:ktor-bom:1.3.1")
     }
     dependencies {
         dependency("org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r")
