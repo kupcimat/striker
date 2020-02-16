@@ -58,17 +58,20 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.3")
-        mavenBom("org.spockframework:spock-bom:2.0-M1-groovy-2.5")
+        mavenBom("org.spockframework:spock-bom:2.0-M2-groovy-3.0")
         mavenBom("io.ktor:ktor-bom:1.3.1")
     }
     dependencies {
-        dependency("org.codehaus.groovy:groovy-all:2.5.9")
+        dependency("org.codehaus.groovy:groovy-all:3.0.0")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.15.0")
         dependency("net.javacrumbs.json-unit:json-unit:2.13.0")
     }
 }
+
+// Override spring-boot-dependencies bom version for groovy
+extra["groovy.version"] = "3.0.0"
 
 dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
