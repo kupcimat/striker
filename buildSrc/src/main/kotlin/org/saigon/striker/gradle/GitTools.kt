@@ -5,16 +5,10 @@ import org.eclipse.jgit.api.Status
 import org.eclipse.jgit.transport.URIish
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import java.io.File
-import java.time.Instant
 
 data class GitAuthor(
     val name: String,
     val email: String
-)
-
-data class GitCommit(
-    val hash: String,
-    val time: Instant? = null
 )
 
 data class GitCredentials(
@@ -27,15 +21,6 @@ fun gitStatus(directory: File): Status {
     return withGit(directory) {
         status()
             .call()
-    }
-}
-
-fun gitLog(directory: File, maxCount: Int): List<GitCommit> {
-    return withGit(directory) {
-        log()
-            .setMaxCount(maxCount)
-            .call()
-            .map { commit -> GitCommit(commit.name, Instant.ofEpochSecond(commit.commitTime.toLong())) }
     }
 }
 
