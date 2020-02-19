@@ -62,7 +62,7 @@ dependencyManagement {
         mavenBom("io.ktor:ktor-bom:1.3.1")
     }
     dependencies {
-        dependency("org.codehaus.groovy:groovy-all:3.0.0")
+        dependency("org.codehaus.groovy:groovy-all:3.0.1")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.15.0")
@@ -71,7 +71,7 @@ dependencyManagement {
 }
 
 // Override spring-boot-dependencies bom version for groovy
-extra["groovy.version"] = "3.0.0"
+extra["groovy.version"] = "3.0.1"
 
 dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
