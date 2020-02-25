@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
       - name: Setup Java
-        uses: actions/setup-java@master
+        uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: Build
@@ -19,7 +19,7 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Release
-        uses: actions/heroku@master
+        uses: actions/heroku@1.0.0
         with:
           args: container:release web --app=${HEROKU_APP}
         env:
