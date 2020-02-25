@@ -21,7 +21,7 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Release
-        uses: actions/heroku@1.0.0
+        uses: actions/heroku@master
         with:
           args: container:release web --app=${HEROKU_APP}
         env:
