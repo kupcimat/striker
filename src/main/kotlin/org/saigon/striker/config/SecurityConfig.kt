@@ -1,5 +1,6 @@
 package org.saigon.striker.config
 
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.web.server.ServerHttpSecurity
@@ -15,6 +16,7 @@ class SecurityConfig {
         http.authorizeExchange {
             it.pathMatchers("/api/admin/**").authenticated()
             it.pathMatchers("/api/**").permitAll()
+            it.matchers(EndpointRequest.to("health", "info")).permitAll()
             it.anyExchange().authenticated()
         }
         return http.build()
