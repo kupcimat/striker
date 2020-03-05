@@ -13,7 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static org.saigon.striker.utils.TestUtilsKt.api
+import static org.saigon.striker.utils.TestUtilsKt.authenticate
 import static org.saigon.striker.utils.TestUtilsKt.jsonEquals
 
 @WebFluxTest(UserController)
@@ -36,7 +36,7 @@ class UserControllerTest extends Specification {
         userService.createUser(_ as UserEntity, _ as Continuation) >> { mockedUserSupplier() }
 
         expect:
-        api(webTestClient).post().uri("/api/admin/users")
+        authenticate(webTestClient).post().uri("/api/admin/users")
                 .bodyValue(inputUser)
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
@@ -67,7 +67,7 @@ class UserControllerTest extends Specification {
         userService.getUser(USER_ID, _ as Continuation) >> mockedUser
 
         expect:
-        api(webTestClient).get().uri("/api/admin/users/$USER_ID")
+        authenticate(webTestClient).get().uri("/api/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson))
@@ -80,7 +80,7 @@ class UserControllerTest extends Specification {
 
     def "DELETE user"() {
         when:
-        api(webTestClient).delete().uri("/api/admin/users/$USER_ID")
+        authenticate(webTestClient).delete().uri("/api/admin/users/$USER_ID")
                 .exchange()
                 .expectStatus().isNoContent()
                 .expectBody().isEmpty()

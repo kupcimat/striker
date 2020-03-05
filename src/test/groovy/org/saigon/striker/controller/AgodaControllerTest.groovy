@@ -13,7 +13,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static org.saigon.striker.utils.TestUtilsKt.api
 import static org.saigon.striker.utils.TestUtilsKt.jsonEquals
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
@@ -33,7 +32,7 @@ class AgodaControllerTest extends Specification {
         agodaService.getHotel(agodaParams, _ as Continuation) >> new Hotel(42, "my-hotel", [])
 
         expect:
-        api(webTestClient).get().uri("/api/agoda${createQueryString(queryParams)}")
+        webTestClient.get().uri("/api/agoda${createQueryString(queryParams)}")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson, ["error-message": Matchers.is(errorMessage)]))
@@ -82,7 +81,7 @@ class AgodaControllerTest extends Specification {
         agodaService.search(queryParams.query, _ as Continuation) >> new SearchResult([])
 
         expect:
-        api(webTestClient).get().uri("/api/agoda/search${createQueryString(queryParams)}")
+        webTestClient.get().uri("/api/agoda/search${createQueryString(queryParams)}")
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
                 .expectBody(String).value(jsonEquals(expectedJson, ["error-message": Matchers.is(errorMessage)]))
