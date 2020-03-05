@@ -17,7 +17,7 @@ val defaultMatchers: Map<String, Matcher<String>> = mapOf(
     "iso-date-time" to matchesPattern("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3,6}Z")
 )
 
-fun api(client: WebTestClient): WebTestClient {
+fun authenticate(client: WebTestClient): WebTestClient {
     return client
         .mutateWith(csrf())
         .mutateWith(mockUser())
