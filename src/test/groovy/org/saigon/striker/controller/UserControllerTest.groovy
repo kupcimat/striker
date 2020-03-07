@@ -88,4 +88,12 @@ class UserControllerTest extends Specification {
         then:
         1 * userService.deleteUser(USER_ID, _ as Continuation)
     }
+
+    def "GET user unauthorized"() {
+        expect:
+        webTestClient.get().uri("/api/admin/users/$USER_ID")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody().isEmpty()
+    }
 }
