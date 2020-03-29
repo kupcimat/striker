@@ -14,8 +14,7 @@ class SecurityConfig {
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         http.authorizeExchange {
-            it.pathMatchers("/api/admin/**").authenticated()
-            it.pathMatchers("/api/**").permitAll()
+            it.pathMatchers("/api/agoda/**").permitAll()
             it.matchers(EndpointRequest.to("health", "info")).permitAll()
             it.anyExchange().authenticated()
         }
