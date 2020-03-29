@@ -13,7 +13,7 @@ plugins {
     kotlin("kapt") version "1.3.71"
     kotlin("plugin.spring") version "1.3.71"
     kotlin("plugin.serialization") version "1.3.71"
-    id("org.springframework.boot") version "2.3.0.M2"
+    id("org.springframework.boot") version "2.3.0.M3"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
     id("com.google.cloud.tools.jib") version "2.1.0"
