@@ -63,9 +63,9 @@ dependencyManagement {
     }
     dependencies {
         dependency("org.codehaus.groovy:groovy-all:3.0.1")
-        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
         dependency("io.mockk:mockk:1.9.3")
-        dependency("com.charleskorn.kaml:kaml:0.15.0")
+        dependency("com.charleskorn.kaml:kaml:0.17.0")
         dependency("net.javacrumbs.json-unit:json-unit:2.13.0")
     }
 }

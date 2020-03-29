@@ -18,7 +18,7 @@ dependencyManagement {
     }
     dependencies {
         dependency("org.eclipse.jgit:org.eclipse.jgit:5.6.1.202002131546-r")
-        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+        dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
     }
 }
 

@@ -3,7 +3,7 @@ package org.saigon.striker.gradle
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.StringDescriptor
+import kotlinx.serialization.builtins.list
 import java.io.File
 import kotlin.text.RegexOption.IGNORE_CASE
 
@@ -19,7 +19,7 @@ data class MavenSearchResult(
 ) {
     @Serializer(MavenSearchResult::class)
     companion object : KSerializer<MavenSearchResult> {
-        override val descriptor: SerialDescriptor = StringDescriptor.withName("MavenSearchResult")
+        override val descriptor: SerialDescriptor = PrimitiveDescriptor("MavenSearchResult", PrimitiveKind.STRING)
 
         override fun deserialize(decoder: Decoder): MavenSearchResult {
             return MavenSearchResult(MavenArtifact.serializer().list.deserialize(decoder))
