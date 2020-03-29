@@ -16,7 +16,8 @@ plugins {
     id("org.springframework.boot") version "2.3.0.M3"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
-    id("com.google.cloud.tools.jib") version "2.1.0"
+    // TODO temporarily downgrade jib until apache http client >= 4.5.12 is used
+    id("com.google.cloud.tools.jib") version "1.7.0"
 }
 
 java {
