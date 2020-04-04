@@ -1,0 +1,26 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+metadata:
+  name: striker
+build:
+  local: {}
+  artifacts:
+    - image: striker-backend
+      context: "."
+      jib: {}
+    - image: striker-frontend
+      context: "../striker-ui"
+      docker: {}
+  tagPolicy:
+    gitCommit: {}
+test:
+  - image: striker-backend
+    structureTests:
+      - "./structure-tests/*"
+  - image: striker-frontend
+    structureTests:
+      - "../striker-ui/structure-tests/*"
+deploy:
+  kubectl:
+    manifests:
+      - "k8s/*"
