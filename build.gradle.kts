@@ -17,7 +17,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
     // TODO temporarily downgrade jib until apache http client >= 4.5.12 is used
-    id("com.google.cloud.tools.jib") version "1.7.0"
+    id("com.google.cloud.tools.jib") version "2.1.0"
 }
 
 java {
@@ -67,7 +67,7 @@ dependencyManagement {
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.17.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.16.2")
+        dependency("net.javacrumbs.json-unit:json-unit:2.17.0")
     }
 }
 
