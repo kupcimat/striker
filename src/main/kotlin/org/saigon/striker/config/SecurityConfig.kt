@@ -13,11 +13,12 @@ class SecurityConfig {
 
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        http.authorizeExchange {
-            it.pathMatchers("/api/agoda/**").permitAll()
-            it.matchers(EndpointRequest.to("health", "info")).permitAll()
-            it.anyExchange().authenticated()
-        }
+        http.authorizeExchange()
+            .pathMatchers("/api/agoda/**").permitAll()
+            .matchers(EndpointRequest.to("health", "info")).permitAll()
+            .anyExchange().authenticated()
+            .and().httpBasic()
+            .and().formLogin()
         return http.build()
     }
 

@@ -13,7 +13,7 @@ plugins {
     kotlin("kapt") version "1.3.71"
     kotlin("plugin.spring") version "1.3.71"
     kotlin("plugin.serialization") version "1.3.71"
-    id("org.springframework.boot") version "2.3.0.M3"
+    id("org.springframework.boot") version "2.3.0.M4"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
     // TODO temporarily downgrade jib until apache http client >= 4.5.12 is used
@@ -67,7 +67,7 @@ dependencyManagement {
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.17.0")
-        dependency("net.javacrumbs.json-unit:json-unit:2.16.2")
+        dependency("net.javacrumbs.json-unit:json-unit:2.17.0")
     }
 }
 
