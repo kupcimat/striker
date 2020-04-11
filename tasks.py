@@ -66,8 +66,9 @@ def run_health_check(ctx, heroku_app="striker-vn"):
     health = get_json(f"https://{heroku_app}.herokuapp.com/actuator/health")
     info = get_json(f"https://{heroku_app}.herokuapp.com/actuator/info")
 
-    print(f"Status  = {safe_get(health, 'status')}")
-    print(f"Version = {safe_get(info, 'build', 'version')} ({safe_get(info, 'build', 'time')})")
+    print(f"Status:        {safe_get(health, 'status')}")
+    print(f"Environment:   {safe_get(info, 'app', 'environment')}")
+    print(f"Build Version: {safe_get(info, 'git', 'commit', 'id', 'full')} ({safe_get(info, 'git', 'branch')})")
 
 
 @task
