@@ -19,6 +19,6 @@ services:
       - backend
     environment:
       PORT: "8081"
-      BACKEND_URI: "http://localhost:8080"
+      BACKEND_URI: "http://backend:8080"
     ports:
       - "8081:8081"
