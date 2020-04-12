@@ -5,7 +5,7 @@ services:
     ports:
       - "27017:27017"
   backend:
-    image: registry.heroku.com/striker-vn/web
+    image: striker-backend
     depends_on:
       - mongo
     environment:
@@ -14,7 +14,7 @@ services:
     ports:
       - "8080:8080"
   frontend:
-    image: registry.heroku.com/striker-vn-ui/web
+    image: striker-frontend
     depends_on:
       - backend
     environment:

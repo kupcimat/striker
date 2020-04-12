@@ -7,29 +7,38 @@ from invoke import task
 
 
 # TODO add tests
-@task
-def build_image(ctx):
+@task(help={"tag": "Image name and tag (optional)"})
+def build_image(ctx, tag="striker-backend"):
     """
     Build docker image locally
     """
-    ctx.run(gradle("jibDockerBuild"))
+    ctx.run(gradle("jibDockerBuild", f"-Djib.to.image={tag}"))
 
 
-@task
-def build_image_ui(ctx):
+@task(help={"tag": "Image name and tag (optional)"})
+def build_image_ui(ctx, tag="striker-frontend"):
     """
     Build UI docker image locally
     """
     with ctx.cd(get_ui_directory()):
-        ctx.run(docker("build", "--tag registry.heroku.com/striker-vn-ui/web", "."))
+        ctx.run(docker("build", f"--tag {tag}", "."))
 
 
 @task(build_image, build_image_ui)
 def deploy_local(ctx):
     """
-    Build docker image and run it locally
+    Build docker images and run app locally
     """
     ctx.run(docker_compose("up"))
+
+
+@task(help={"port-forward": "Enable port forwarding (optional)"})
+def deploy_local_k8s(ctx, port_forward="true"):
+    """
+    Build docker images and run app locally on k8s
+    """
+    ctx.run(minikube("start"))
+    ctx.run(skaffold("dev", f"--port-forward={port_forward}"))
 
 
 @task(help={"username": "Heroku docker registry username",
@@ -129,6 +138,14 @@ def docker(*arguments: str) -> str:
 
 def docker_compose(*arguments: str) -> str:
     return f"docker-compose {join(arguments)}"
+
+
+def minikube(*arguments: str) -> str:
+    return f"minikube {join(arguments)}"
+
+
+def skaffold(*arguments: str) -> str:
+    return f"skaffold {join(arguments)}"
 
 
 def heroku(*arguments: str) -> str:
