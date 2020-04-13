@@ -81,17 +81,29 @@ def run_tests(ctx, username, password, heroku_app="striker-vn"):
                    f"-Dpassword={password}"))
 
 
-@task(help={"heroku-app": "Heroku application name (optional)"})
-def run_health_check(ctx, heroku_app="striker-vn"):
+@task(help={"app": "Heroku application name (optional)"})
+def health_check(ctx, app="striker-vn"):
     """
-    Run application health check
+    Run application health check for backend
     """
-    health = get_json(f"https://{heroku_app}.herokuapp.com/actuator/health")
-    info = get_json(f"https://{heroku_app}.herokuapp.com/actuator/info")
+    health = get_json(f"https://{app}.herokuapp.com/actuator/health")
+    info = get_json(f"https://{app}.herokuapp.com/actuator/info")
 
     print(f"Status:        {safe_get(health, 'status')}")
     print(f"Environment:   {safe_get(info, 'app', 'environment')}")
     print(f"Build Version: {safe_get(info, 'git', 'commit', 'id', 'full')} ({safe_get(info, 'git', 'branch')})")
+
+
+@task(help={"app": "Heroku application name (optional)"})
+def health_check_ui(ctx, app="striker-vn-ui"):
+    """
+    Run application health check for frontend
+    """
+    health = get_json(f"https://{app}.herokuapp.com/health")
+    info = get_json(f"https://{app}.herokuapp.com/info.json")
+
+    print(f"Status:        {safe_get(health, 'status')}")
+    print(f"Build Version: {safe_get(info, 'build', 'revision')}")
 
 
 @task
