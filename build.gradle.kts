@@ -9,10 +9,10 @@ version = "release"
 plugins {
     java
     groovy
-    kotlin("jvm") version "1.3.71"
-    kotlin("kapt") version "1.3.71"
-    kotlin("plugin.spring") version "1.3.71"
-    kotlin("plugin.serialization") version "1.3.71"
+    kotlin("jvm") version "1.3.72"
+    kotlin("kapt") version "1.3.72"
+    kotlin("plugin.spring") version "1.3.72"
+    kotlin("plugin.serialization") version "1.3.72"
     id("org.springframework.boot") version "2.3.0.M4"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
