@@ -41,17 +41,31 @@ def deploy_local_k8s(ctx, port_forward="true"):
     ctx.run(skaffold("dev", f"--port-forward={port_forward}"))
 
 
-@task(help={"username": "Heroku docker registry username",
-            "password": "Heroku docker registry password",
-            "heroku-app": "Heroku application name (optional)"})
-def deploy_heroku(ctx, username, password, heroku_app="striker-vn"):
+@task(help={"token": "Heroku authentication token",
+            "app": "Heroku application name (optional)"})
+def deploy_heroku(ctx, token, app="striker-vn"):
     """
     Deploy docker image on heroku
     """
     ctx.run(gradle("jib",
-                   f"-Djib.to.auth.username={username}",
-                   f"-Djib.to.auth.password={password}"))
-    ctx.run(heroku("container:release web", f"--app={heroku_app}"))
+                   f"-Djib.to.auth.username=_",
+                   f"-Djib.to.auth.password={token}"))
+    ctx.run(heroku("container:release web", f"--app={app}"))
+
+
+@task(help={"token": "Heroku authentication token",
+            "app": "Heroku application name (optional)"})
+def deploy_heroku_ui(ctx, token, app="striker-vn-ui"):
+    """
+    Deploy UI docker image on heroku
+    """
+    ctx.run(docker("login",
+                   f"--username=_",
+                   f"--password={token}",
+                   "registry.heroku.com"))
+    with ctx.cd(get_ui_directory()):
+        ctx.run(heroku("container:push web", f"--app={app}"))
+    ctx.run(heroku("container:release web", f"--app={app}"))
 
 
 @task(help={"username": "Application test user username",
