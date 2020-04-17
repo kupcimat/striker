@@ -1,0 +1,17 @@
+schemaVersion: 2.0.0
+
+metadataTest:
+  env:
+    - key: "JAVA_VERSION"
+      value: "11.0.6"
+  entrypoint:
+    - "java"
+    - "-Xmx300m"
+    - "-Xss512k"
+    - "-XX:CICompilerCount=2"
+    - "-Dfile.encoding=UTF-8"
+    - "-cp"
+    - "/app/resources:/app/classes:/app/libs/*"
+    - "org.saigon.striker.StrikerApplicationKt"
+  cmd:
+    - "--spring.profiles.active=heroku"

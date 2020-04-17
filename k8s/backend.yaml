@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - port: 8080
+      targetPort: backend-port
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: striker-backend
+          ports:
+            - name: backend-port
+              containerPort: 8080
+          env:
+            - name: "PORT"
+              value: "8080"
+            - name: "MONGODB_URI"
+              value: "mongodb://mongo-service/test"
+          livenessProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: backend-port
+            initialDelaySeconds: 20
+          readinessProbe:
+            httpGet:
+              path: "/actuator/health/readiness"
+              port: backend-port
+            initialDelaySeconds: 20

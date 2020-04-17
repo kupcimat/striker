@@ -7,42 +7,65 @@ from invoke import task
 
 
 # TODO add tests
-@task
-def build_image(ctx):
+@task(help={"tag": "Image name and tag (optional)"})
+def build_image(ctx, tag="striker-backend"):
     """
     Build docker image locally
     """
-    ctx.run(gradle("jibDockerBuild"))
+    ctx.run(gradle("jibDockerBuild", f"-Djib.to.image={tag}"))
 
 
-@task
-def build_image_ui(ctx):
+@task(help={"tag": "Image name and tag (optional)"})
+def build_image_ui(ctx, tag="striker-frontend"):
     """
     Build UI docker image locally
     """
     with ctx.cd(get_ui_directory()):
-        ctx.run(docker("build", "--tag registry.heroku.com/striker-vn-ui/web", "."))
+        ctx.run(docker("build", f"--tag {tag}", "."))
 
 
 @task(build_image, build_image_ui)
 def deploy_local(ctx):
     """
-    Build docker image and run it locally
+    Build docker images and run app locally
     """
     ctx.run(docker_compose("up"))
 
 
-@task(help={"username": "Heroku docker registry username",
-            "password": "Heroku docker registry password",
-            "heroku-app": "Heroku application name (optional)"})
-def deploy_heroku(ctx, username, password, heroku_app="striker-vn"):
+@task(help={"port-forward": "Enable port forwarding (optional)"})
+def deploy_local_k8s(ctx, port_forward="true"):
+    """
+    Build docker images and run app locally on k8s
+    """
+    ctx.run(minikube("start"))
+    ctx.run(skaffold("dev", f"--port-forward={port_forward}"))
+
+
+@task(help={"token": "Heroku authentication token",
+            "app": "Heroku application name (optional)"})
+def deploy_heroku(ctx, token, app="striker-vn"):
     """
     Deploy docker image on heroku
     """
     ctx.run(gradle("jib",
-                   f"-Djib.to.auth.username={username}",
-                   f"-Djib.to.auth.password={password}"))
-    ctx.run(heroku("container:release web", f"--app={heroku_app}"))
+                   f"-Djib.to.auth.username=_",
+                   f"-Djib.to.auth.password={token}"))
+    ctx.run(heroku("container:release web", f"--app={app}"))
+
+
+@task(help={"token": "Heroku authentication token",
+            "app": "Heroku application name (optional)"})
+def deploy_heroku_ui(ctx, token, app="striker-vn-ui"):
+    """
+    Deploy UI docker image on heroku
+    """
+    ctx.run(docker("login",
+                   f"--username=_",
+                   f"--password={token}",
+                   "registry.heroku.com"))
+    with ctx.cd(get_ui_directory()):
+        ctx.run(heroku("container:push web", f"--app={app}"))
+    ctx.run(heroku("container:release web", f"--app={app}"))
 
 
 @task(help={"username": "Application test user username",
@@ -58,17 +81,29 @@ def run_tests(ctx, username, password, heroku_app="striker-vn"):
                    f"-Dpassword={password}"))
 
 
-@task(help={"heroku-app": "Heroku application name (optional)"})
-def run_health_check(ctx, heroku_app="striker-vn"):
+@task(help={"app": "Heroku application name (optional)"})
+def health_check(ctx, app="striker-vn"):
     """
-    Run application health check
+    Run application health check for backend
     """
-    health = get_json(f"https://{heroku_app}.herokuapp.com/actuator/health")
-    info = get_json(f"https://{heroku_app}.herokuapp.com/actuator/info")
+    health = get_json(f"https://{app}.herokuapp.com/actuator/health")
+    info = get_json(f"https://{app}.herokuapp.com/actuator/info")
 
     print(f"Status:        {safe_get(health, 'status')}")
     print(f"Environment:   {safe_get(info, 'app', 'environment')}")
     print(f"Build Version: {safe_get(info, 'git', 'commit', 'id', 'full')} ({safe_get(info, 'git', 'branch')})")
+
+
+@task(help={"app": "Heroku application name (optional)"})
+def health_check_ui(ctx, app="striker-vn-ui"):
+    """
+    Run application health check for frontend
+    """
+    health = get_json(f"https://{app}.herokuapp.com/health")
+    info = get_json(f"https://{app}.herokuapp.com/info.json")
+
+    print(f"Status:        {safe_get(health, 'status')}")
+    print(f"Build Version: {safe_get(info, 'build', 'revision')}")
 
 
 @task
@@ -129,6 +164,14 @@ def docker(*arguments: str) -> str:
 
 def docker_compose(*arguments: str) -> str:
     return f"docker-compose {join(arguments)}"
+
+
+def minikube(*arguments: str) -> str:
+    return f"minikube {join(arguments)}"
+
+
+def skaffold(*arguments: str) -> str:
+    return f"skaffold {join(arguments)}"
 
 
 def heroku(*arguments: str) -> str:
