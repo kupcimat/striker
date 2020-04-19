@@ -19,6 +19,13 @@ plugins {
     id("com.google.cloud.tools.jib") version "2.2.0"
 }
 
+buildscript {
+    dependencies {
+        // TODO temporarily override apache http client version until jib upgrades it
+        classpath("org.apache.httpcomponents:httpclient:4.5.12")
+    }
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
