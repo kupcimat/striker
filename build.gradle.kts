@@ -10,10 +10,9 @@ plugins {
     java
     groovy
     kotlin("jvm") version "1.3.72"
-    kotlin("kapt") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.serialization") version "1.3.72"
-    id("org.springframework.boot") version "2.3.0.M4"
+    id("org.springframework.boot") version "2.3.0.RC1"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
     id("com.google.cloud.tools.jib") version "2.2.0"
@@ -64,7 +63,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.5")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.6")
         mavenBom("org.spockframework:spock-bom:2.0-M2-groovy-3.0")
         mavenBom("io.ktor:ktor-bom:1.3.2")
     }
@@ -81,8 +80,6 @@ dependencyManagement {
 extra["groovy.version"] = "3.0.3"
 
 dependencies {
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
-
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
