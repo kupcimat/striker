@@ -15,7 +15,7 @@ plugins {
     id("org.springframework.boot") version "2.3.0.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
-    id("com.google.cloud.tools.jib") version "2.3.0"
+    id("com.google.cloud.tools.jib") version "2.4.0"
 }
 
 buildscript {
