@@ -12,7 +12,7 @@ plugins {
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.serialization") version "1.3.72"
-    id("org.springframework.boot") version "2.3.1.RELEASE"
+    id("org.springframework.boot") version "2.4.0-M1"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.gorylenko.gradle-git-properties") version "2.2.2"
     id("com.google.cloud.tools.jib") version "2.4.0"
@@ -63,12 +63,12 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.7")
-        mavenBom("org.spockframework:spock-bom:2.0-M2-groovy-3.0")
+        mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.3.8")
+        mavenBom("org.spockframework:spock-bom:2.0-M3-groovy-3.0")
         mavenBom("io.ktor:ktor-bom:1.3.2")
     }
     dependencies {
-        dependency("org.codehaus.groovy:groovy-all:3.0.3")
+        dependency("org.codehaus.groovy:groovy-all:3.0.4")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.17.0")
@@ -77,7 +77,7 @@ dependencyManagement {
 }
 
 // Override spring-boot-dependencies bom version for groovy
-extra["groovy.version"] = "3.0.3"
+extra["groovy.version"] = "3.0.4"
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
@@ -110,9 +110,7 @@ dependencies {
 
 configurations {
     testImplementation {
-        // TODO exclude junit 4 dependency when migrated to Spock 2.0
-        // exclude(group = "junit", module = "junit")
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "junit", module = "junit")
     }
 }
 
