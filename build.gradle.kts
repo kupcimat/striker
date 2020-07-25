@@ -68,16 +68,16 @@ dependencyManagement {
         mavenBom("io.ktor:ktor-bom:1.3.2")
     }
     dependencies {
-        dependency("org.codehaus.groovy:groovy-all:3.0.4")
+        dependency("org.codehaus.groovy:groovy-all:3.0.5")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
         dependency("io.mockk:mockk:1.9.3")
-        dependency("com.charleskorn.kaml:kaml:0.17.0")
+        dependency("com.charleskorn.kaml:kaml:0.18.1")
         dependency("net.javacrumbs.json-unit:json-unit:2.18.1")
     }
 }
 
 // Override spring-boot-dependencies bom version for groovy
-extra["groovy.version"] = "3.0.4"
+extra["groovy.version"] = "3.0.5"
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
