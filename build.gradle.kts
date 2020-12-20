@@ -44,7 +44,7 @@ gitProperties {
 
 jib {
     from {
-        image = "gcr.io/distroless/java:11"
+        image = "gcr.io/distroless/java-debian10:11"
     }
     to {
         image = "registry.heroku.com/striker-vn/web"
