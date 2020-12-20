@@ -3,7 +3,7 @@ schemaVersion: 2.0.0
 metadataTest:
   env:
     - key: "JAVA_VERSION"
-      value: "11.0.6"
+      value: "11.0.9.1"
   entrypoint:
     - "java"
     - "-Xmx300m"
