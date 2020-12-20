@@ -12,11 +12,6 @@ data class MavenArtifact(
     val versions: List<String>
 )
 
-@Serializable
-data class MavenSearchResult(
-    val artifacts: List<MavenArtifact>
-)
-
 suspend fun upgradeVersions(buildFile: File) {
     val pluginRegex = Regex("""(id|kotlin)\("(.+)"\) version "(.+)"""")
     val dependencyRegex = Regex("""dependency\("(.+):(.+):(.+)"\)""")
@@ -67,22 +62,22 @@ suspend fun findLatestPluginVersion(pluginId: String): String? {
 }
 
 suspend fun findLatestDependencyVersion(group: String, name: String): String? {
-    val result = withHttpClient {
-        get<MavenSearchResult>("https://api.bintray.com/search/packages/maven") {
+    val artifacts = withHttpClient {
+        get<List<MavenArtifact>>("https://api.bintray.com/search/packages/maven") {
             parameter("g", group)
             parameter("a", name)
         }
     }
 
-    return findPreferredArtifact(result)?.versions
+    return findPreferredArtifact(artifacts)?.versions
         ?.filter(::isStableVersion)
         ?.firstOrNull(::isCompatibleVersion)
 }
 
-fun findPreferredArtifact(result: MavenSearchResult): MavenArtifact? {
+fun findPreferredArtifact(artifacts: List<MavenArtifact>): MavenArtifact? {
     val preferredRepoOwners = listOf("kotlin", "groovy", "bintray")
     return preferredRepoOwners.fold(null as MavenArtifact?) { selectedArtifact, preferredOwner ->
-        selectedArtifact ?: result.artifacts.find { it.owner == preferredOwner }
+        selectedArtifact ?: artifacts.find { it.owner == preferredOwner }
     }
 }
 
