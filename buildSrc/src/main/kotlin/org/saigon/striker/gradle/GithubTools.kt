@@ -19,19 +19,14 @@ data class PullRequest(
     val url: String
 )
 
-@Serializable
-data class PullRequestList(
-    val pullRequests: List<PullRequest>
-)
-
 suspend fun existsPullRequest(githubToken: String, pullRequest: PullRequestCreate): Boolean {
-    val response = withHttpClient {
-        get<PullRequestList> {
+    val pullRequests = withHttpClient {
+        get<List<PullRequest>> {
             pullRequestUrl(pullRequest.head, pullRequest.base)
             authorization(githubToken)
         }
     }
-    return response.pullRequests.isNotEmpty()
+    return pullRequests.isNotEmpty()
 }
 
 suspend fun createPullRequest(githubToken: String, pullRequest: PullRequestCreate) {
