@@ -3,7 +3,6 @@ package org.saigon.striker.gradle
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import kotlinx.serialization.*
-import kotlinx.serialization.builtins.list
 import java.io.File
 import kotlin.text.RegexOption.IGNORE_CASE
 
@@ -16,16 +15,7 @@ data class MavenArtifact(
 @Serializable
 data class MavenSearchResult(
     val artifacts: List<MavenArtifact>
-) {
-    @Serializer(MavenSearchResult::class)
-    companion object : KSerializer<MavenSearchResult> {
-        override val descriptor: SerialDescriptor = PrimitiveDescriptor("MavenSearchResult", PrimitiveKind.STRING)
-
-        override fun deserialize(decoder: Decoder): MavenSearchResult {
-            return MavenSearchResult(MavenArtifact.serializer().list.deserialize(decoder))
-        }
-    }
-}
+)
 
 suspend fun upgradeVersions(buildFile: File) {
     val pluginRegex = Regex("""(id|kotlin)\("(.+)"\) version "(.+)"""")

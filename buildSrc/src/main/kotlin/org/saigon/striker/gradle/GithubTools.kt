@@ -4,7 +4,6 @@ import io.ktor.client.request.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.*
-import kotlinx.serialization.builtins.list
 
 @Serializable
 data class PullRequestCreate(
@@ -23,16 +22,7 @@ data class PullRequest(
 @Serializable
 data class PullRequestList(
     val pullRequests: List<PullRequest>
-) {
-    @Serializer(PullRequestList::class)
-    companion object : KSerializer<PullRequestList> {
-        override val descriptor: SerialDescriptor = PrimitiveDescriptor("PullRequestList", PrimitiveKind.STRING)
-
-        override fun deserialize(decoder: Decoder): PullRequestList {
-            return PullRequestList(PullRequest.serializer().list.deserialize(decoder))
-        }
-    }
-}
+)
 
 suspend fun existsPullRequest(githubToken: String, pullRequest: PullRequestCreate): Boolean {
     val response = withHttpClient {
