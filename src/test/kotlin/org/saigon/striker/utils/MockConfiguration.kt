@@ -22,7 +22,7 @@ data class MockResponse(
 )
 
 fun yamlConfiguration(configuration: File): MockConfiguration {
-    return Yaml.default.parse(MockConfiguration.serializer(), configuration.readText())
+    return Yaml.default.decodeFromString(MockConfiguration.serializer(), configuration.readText())
 }
 
 fun mockConfiguration(builder: PathsBuilder.() -> Unit): MockConfiguration {
