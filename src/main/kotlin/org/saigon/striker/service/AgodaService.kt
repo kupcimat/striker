@@ -1,5 +1,6 @@
 package org.saigon.striker.service
 
+import kotlinx.coroutines.reactive.awaitSingle
 import org.saigon.striker.model.*
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -8,8 +9,6 @@ import org.springframework.http.MediaType.TEXT_HTML
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
-import org.springframework.web.reactive.function.client.awaitEntity
-import org.springframework.web.reactive.function.client.awaitExchange
 import org.springframework.web.util.UriComponentsBuilder
 
 @Component
@@ -47,12 +46,11 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
         val responseEntity = webClient.get()
             .uri("/")
             .accept(TEXT_HTML)
-            .awaitExchange()
-            .awaitEntity<String>() // retrieve body to release resources
+            .retrieve()
+            .onStatus(HttpStatus::isError) { Exceptions.handleAgodaError(it) }
+            .toBodilessEntity()
+            .awaitSingle()
 
-        if (responseEntity.statusCode.isError) {
-            throw AgodaApiException(responseEntity.statusCode)
-        }
         return getCookieId(responseEntity.headers[HttpHeaders.SET_COOKIE])
     }
 
