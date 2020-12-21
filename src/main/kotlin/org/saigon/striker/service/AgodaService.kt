@@ -17,7 +17,9 @@ class AgodaService(webClientBuilder: WebClient.Builder, baseUrl: String = "https
     private val cookieName = "agoda.version.03"
     private val cookieIdRegex = Regex("CookieId=([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})")
 
-    val webClient = webClientBuilder.baseUrl(baseUrl).build()
+    val webClient = webClientBuilder
+        .codecs { it.defaultCodecs().maxInMemorySize(1 * 1024 * 1024) }
+        .baseUrl(baseUrl).build()
 
     suspend fun getHotel(parameters: AgodaParameters): Hotel {
         val agodaHotel = webClient.get()

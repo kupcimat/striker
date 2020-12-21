@@ -7,16 +7,16 @@ import org.saigon.striker.service.UserService
 import org.saigon.striker.service.UsernameAlreadyExistsException
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static org.saigon.striker.utils.TestUtilsKt.authenticate
 import static org.saigon.striker.utils.TestUtilsKt.jsonEquals
 
-@WebFluxTest(UserController)
+@Ignore("Rewrite to kotlin")
 class UserControllerTest extends Specification {
 
     static final String USER_ID = "userId"
