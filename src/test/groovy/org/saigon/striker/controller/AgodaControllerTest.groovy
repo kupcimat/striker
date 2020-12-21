@@ -8,8 +8,8 @@ import org.saigon.striker.model.SearchResult
 import org.saigon.striker.service.AgodaService
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.test.web.reactive.server.WebTestClient
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -17,7 +17,7 @@ import static org.saigon.striker.utils.TestUtilsKt.jsonEquals
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.OK
 
-@WebFluxTest(AgodaController)
+@Ignore("Rewrite to kotlin")
 class AgodaControllerTest extends Specification {
 
     @Autowired
