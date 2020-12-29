@@ -1,4 +1,4 @@
-package org.saigon.striker.controller
+package org.saigon.striker.handler
 
 import org.saigon.striker.model.User
 import org.saigon.striker.model.toEntity
@@ -6,13 +6,14 @@ import org.saigon.striker.model.toUserWithoutPassword
 import org.saigon.striker.service.UserService
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.ServerResponse.*
+import java.net.URI
 
 class UserHandler(private val userService: UserService) {
 
     suspend fun createUser(request: ServerRequest): ServerResponse {
         val user = request.awaitBody<User>()
         val userEntity = userService.createUser(user.toEntity())
-        return created(UriTemplates.expandUser(userEntity.id)).bodyValueAndAwait(userEntity.toUserWithoutPassword())
+        return created(URI("/api/admin/users/${userEntity.id}")).bodyValueAndAwait(userEntity.toUserWithoutPassword())
     }
 
     suspend fun getUser(request: ServerRequest): ServerResponse {

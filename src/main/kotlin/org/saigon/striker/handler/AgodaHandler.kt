@@ -1,4 +1,4 @@
-package org.saigon.striker.controller
+package org.saigon.striker.handler
 
 import org.saigon.striker.model.AgodaParameters
 import org.saigon.striker.service.AgodaService
