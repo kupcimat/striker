@@ -70,6 +70,7 @@ dependencyManagement {
     dependencies {
         dependency("org.codehaus.groovy:groovy-all:3.0.7")
         dependency("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+        dependency("org.springframework.fu:spring-fu-kofu:0.4.3")
         dependency("io.mockk:mockk:1.9.3")
         dependency("com.charleskorn.kaml:kaml:0.26.0")
         dependency("net.javacrumbs.json-unit:json-unit:2.22.0")
@@ -89,6 +90,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.fu:spring-fu-kofu")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     testImplementation("org.codehaus.groovy:groovy-all")

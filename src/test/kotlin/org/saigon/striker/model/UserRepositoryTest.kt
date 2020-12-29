@@ -6,20 +6,25 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullSource
+import org.saigon.striker.SetupTest
 import org.saigon.striker.UserEntitySource
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
+import org.saigon.striker.dataConfig
+import org.springframework.beans.factory.getBean
 import org.springframework.data.mongodb.core.ReactiveMongoOperations
 import org.springframework.data.mongodb.core.dropCollection
+import org.springframework.fu.kofu.application
 
-@DataMongoTest
-class UserRepositoryTest(@Autowired val mongoOperations: ReactiveMongoOperations) {
-
-    val userRepository = UserRepository(mongoOperations)
+class UserRepositoryTest : SetupTest(
+    application {
+        enable(dataConfig)
+    }
+) {
+    private lateinit var userRepository: UserRepository
 
     @BeforeEach
     fun setUp() {
-        mongoOperations.dropCollection<UserEntity>().block()
+        userRepository = context.getBean()
+        context.getBean<ReactiveMongoOperations>().dropCollection<UserEntity>().block()
     }
 
     @NullSource
