@@ -12,6 +12,7 @@ import org.springframework.fu.kofu.mongo.reactiveMongodb
 import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.web.reactive.function.client.WebClient
+import java.util.*
 
 object Profiles {
     const val TEST: String = "test"
@@ -49,6 +50,7 @@ val webConfig = configuration {
         codecs {
             string()
             jackson {
+                timeZone = TimeZone.getTimeZone("UTC")
                 dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
             }
         }
