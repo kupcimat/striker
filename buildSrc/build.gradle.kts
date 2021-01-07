@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.serialization") version "1.4.21"
+    kotlin("jvm") version "1.4.30-M1"
+    kotlin("plugin.serialization") version "1.4.30-M1"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
 }
 
